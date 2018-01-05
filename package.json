@@ -1,0 +1,22 @@
+{
+  "name": "online-music-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "init": "npm i && cd client && npm i",
+    "start": "concurrently \"nodemon ./bin/www\" \"cd client && npm start\""
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.14.7"
+  }
+}
