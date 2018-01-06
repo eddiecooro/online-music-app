@@ -25,7 +25,7 @@ var UserSchema = new Schema({
     playlist:[Number], //playlist Id's
     followedArtist:[Number],
     songsRel:[{songId:Number,rel:String}],
-    loginTime:[Number]
+    loginTime:Number
 });
 
 UserSchema.pre('save', function(next){

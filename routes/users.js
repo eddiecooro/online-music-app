@@ -17,7 +17,7 @@ router.get('/', (req, res, next)=>{
 
 // Get user with specified ID
 router.get('/:id', (req, res, next)=>{
-    User.findById(id).then((data)=>{
+    User.findById(req.params.id).then((data)=>{
         res.type('json');
         res.send(data);
     }).catch((err)=>{
