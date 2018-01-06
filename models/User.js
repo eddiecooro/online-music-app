@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 function validateEmail(email) {
     var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    return emailRegex.test(email.text);
+    return emailRegex.test(email);
  }
 
 var UserSchema = new Schema({
@@ -23,10 +23,10 @@ var UserSchema = new Schema({
     nickname:String,
     gender:String,
     age:{type:Number,min:1,max:200},
-    playlist:[number], //playlist Id's
+    playlist:[Number], //playlist Id's
     followedArtist:[Number],
     songsRel:[{songId:Number,rel:String}],
-    loginTime:[Number]
+    loginTime:Number
 }, {
     runSettersOnQuery: true,
 });
@@ -38,6 +38,6 @@ UserSchema.pre('save', function(next){
     next();
 });
 
-UserSchema.plugin(require('mongooseBcrypt'), {rounds: 10});
+UserSchema.plugin(mb, {rounds: 10});
 
 module.exports = mongoose.model("User", UserSchema);
