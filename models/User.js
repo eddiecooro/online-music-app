@@ -21,13 +21,7 @@ var UserSchema = new Schema({
     nickname:String,
     gender:String,
     age:{type:Number,min:1,max:200},
-    playlist:[{
-        name:String,
-        cover:String,
-        trackCount:{type:Number,min:1},
-        shuffle:{type:Boolean,default:false},
-        tracks:[Number],
-    }],
+    playlist:[number], //playlist Id's
     followedArtist:[Number],
     songsRel:[{songId:Number,rel:String}],
     loginTime:[Number]
