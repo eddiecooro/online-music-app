@@ -10,12 +10,14 @@ var SongSchema = new mongoose.Schema({
     releaseData: Date,
     url: String,
     cover: String,
+    rels: [{ rel:String, rel_id:Number }],
     album: { type: Number, default: -1 },
 });
 
 var ArtistSchema = new mongoose.Schema({
     name: String,
     desc: String,
+    rels: [{ rel:String, rel_id:Number }],
     songs: [{
         rel: String, // For example: Singer | Writter | Composer ...        
         song: SongSchema
