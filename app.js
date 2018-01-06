@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -6,6 +7,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 // adding helmet secury middleware
 const helmet = require('helmet');
+
+mongoose.connect('mongodb://localhost/onlineMusicApp');
+mongoose.Promise = global.Promise;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -16,12 +20,12 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(helmet);
+app.use(helmet());
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

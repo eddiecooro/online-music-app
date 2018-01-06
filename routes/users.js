@@ -4,11 +4,12 @@ var router = express.Router();
 
 // Get all users
 router.get('/', (req, res, next)=>{
-
-    User.find().then((data)=>{
-        res.type(json);
+    console.log("get all users")
+    User.find({}).then((data)=>{
+        console.log(data);
+        res.type('json');
         res.send(data);
-    }).catch((data)=>{
+    }).catch((err)=>{
         console.log(err);
         res.send(err);
     });
@@ -17,9 +18,9 @@ router.get('/', (req, res, next)=>{
 // Get user with specified ID
 router.get('/:id', (req, res, next)=>{
     User.findById(id).then((data)=>{
-        res.type(json);
+        res.type('json');
         res.send(data);
-    }).catch((data)=>{
+    }).catch((err)=>{
         console.log(err);
         res.send(err);
     });
@@ -27,6 +28,7 @@ router.get('/:id', (req, res, next)=>{
 
 // Create new User
 router.post('/', (req, res, next)=>{
+    console.log(req.body);
     let body = req.body
     user = new User({
         username: body.username,
@@ -41,10 +43,9 @@ router.post('/', (req, res, next)=>{
     });
 
     user.save().then((user)=>{
-        res.type(json);
+        res.type('json');
         res.send({id: user._id});
     }).catch((err)=>{
-        console.log(err);
         res.send(err);  
     });
 });
@@ -63,7 +64,7 @@ router.put('/:id', (req, res, next)=>{
 
 // Delete existing user
 router.delete('/:id', (req, res, next)=>{
-    User.remove('/req.params.id').then(()=>{
+    User.remove({_id:req.params.id}).then(()=>{
         res.status(200);
         res.send();
     }).catch((err)=>{
@@ -71,3 +72,5 @@ router.delete('/:id', (req, res, next)=>{
         res.send(err);
     })
 });
+
+module.exports = router;
