@@ -6,6 +6,7 @@ var PlaylistSchema = new Schema({
     name:{type:String,require:true},
     tracks:[Number],
     cover:String,
+    private: {type:Boolean, default:true},
     expireDate:Date
 });
 
