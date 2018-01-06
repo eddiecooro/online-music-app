@@ -26,6 +26,8 @@ var UserSchema = new Schema({
     followedArtist:[Number],
     songsRel:[{songId:Number,rel:String}],
     loginTime:[Number]
+}, {
+    runSettersOnQuery: true,
 });
 
 UserSchema.pre('save', function(next){
