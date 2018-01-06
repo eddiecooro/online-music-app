@@ -9,6 +9,7 @@ function validateEmail(email) {
 
 var UserSchema = new Schema({
     emailValidated: {type:Boolean,default:false},
+    validateUrl: {type:String},    
     username: {type: String,required:true,unique:true},
     password: {type: String,required:true, bcrypt: true},
     email:{
