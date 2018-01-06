@@ -13,14 +13,12 @@
     "express": "~4.15.5",
     "helmet": "^3.9.0",
     "jade": "~1.11.0",
-<<<<<<< HEAD
     "mongoose": "^5.0.0-rc2",
-=======
     "mongoose": "latest",
     "mongoose-bcrypt": "^1.5.0",
->>>>>>> refs/remotes/origin/Mohammad
     "morgan": "~1.9.0",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "mongoose": "latest"
   },
   "devDependencies": {
     "concurrently": "^3.5.1",
