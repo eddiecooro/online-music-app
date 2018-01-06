@@ -58,6 +58,16 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+<<<<<<< HEAD
+=======
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
+  </component>
+>>>>>>> refs/remotes/origin/Mohammad
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -138,7 +148,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="4715000" />
+=======
+    <option name="totallyTimeSpent" value="4558000" />
+>>>>>>> refs/remotes/origin/Mohammad
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="476" height="900" extended-state="0" />
