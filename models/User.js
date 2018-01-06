@@ -15,6 +15,7 @@ var UserSchema = new Schema({
         type:String,
         unique: true,
         required: true,
+        lowercase: true,
         validate: validateEmail,
     },
     avatar:String,
