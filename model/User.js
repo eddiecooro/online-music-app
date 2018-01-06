@@ -36,7 +36,8 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function(next){
     this.followedArtist = this.followedArtist.filter(function(item, pos) {
         return this.followedArtist.indexOf(item) == pos;
-    })
+    });
+    next();
 });
 
 UserSchema.plugin(require('mongooseBcrypt'), {rounds: 10});
