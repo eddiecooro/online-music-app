@@ -11,6 +11,7 @@ var SongSchema = new mongoose.Schema({
     url: String,
     cover: String,
     album: { type: Number, default: -1 },
+    tag:[String]
 });
 
 var ArtistSchema = new mongoose.Schema({
