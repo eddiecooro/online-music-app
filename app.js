@@ -8,11 +8,15 @@ const bodyParser = require('body-parser');
 // adding helmet secury middleware
 const helmet = require('helmet');
 
-mongoose.connect('mongodb://localhost/onlineMusicApp');
+mongoose.connect('mongodb://localhost/onlineMusicApp').then(() =>{
+    console.log("Connected Seccessfuly");}).catch((err) =>{
+    console.log(err);
+});
 mongoose.Promise = global.Promise;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var playlist = require('./routes/playlist')
 
 var app = express();
 
@@ -31,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/playlist', playlist);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
