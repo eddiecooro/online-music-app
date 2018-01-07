@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "init": "npm i && cd client && npm i",
-    "start": "concurrently \"nodemon ./bin/www\" \"cd client && npm start\""
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
