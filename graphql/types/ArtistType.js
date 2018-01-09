@@ -1,4 +1,4 @@
-import {nodeInterface} from './node.js';
+import {nodeInterface} from '../node.js';
 import {PlaylistType} from './PlaylistType';
 import {UserType} from './UserType';
 import {AlbumType} from './AlbumType';
