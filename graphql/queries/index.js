@@ -18,7 +18,7 @@ export const RootQuery = new GraphQLObjectType({
                 }
             },
             resolve(source,args) {
-                return db.getData(args.id).then((data)=>{
+                return db.getData(db.nodeIdToDbId(args.id)).then((data)=>{
                     return data;
                 }).catch((err)=>{
                     console.log(err);
