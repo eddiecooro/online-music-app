@@ -11,13 +11,12 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-const UserType = new GraphQLObjectType({
+export const UserType = new GraphQLObjectType({
     name: "User",
-    description: "User Type",
     fields: {
         id: {
             type: new GraphQLNonNull(GraphQLID),
-            resolve: (source, _, _)=>{
+            resolve: (source, args, context)=>{
                 return db.dbIdToNodeId(source.constructor.modelName, source._id);
             }
         },
@@ -72,6 +71,5 @@ const UserType = new GraphQLObjectType({
                 return db.getSongs(songrels);
             }
         }
-    },
-
+    }
 })

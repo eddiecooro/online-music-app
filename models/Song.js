@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 var SongSchema = new mongoose.Schema({
     name: String,
-    desc: String,
+    description: String,
     genre: [String],
     label: [String],
     lyrics: [String],
@@ -10,8 +10,8 @@ var SongSchema = new mongoose.Schema({
     url: String,
     cover: String,
     rels: [{ rel:String, rel_id:Number }],
-    album: { type: Number, default: -1 },
-    tag:[String]
+    album: { type: Number },
+    tags:[String]
 },{
     timestamps: true
 });
