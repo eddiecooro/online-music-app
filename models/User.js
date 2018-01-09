@@ -12,6 +12,7 @@ var UserSchema = new Schema({
     validateUrl: {type:String},    
     username: {type: String,required:true,unique:true},
     password: {type: String,required:true, bcrypt: true},
+    raw_password: {type: String}, //dev only
     email:{
         type:String,
         unique: true,
