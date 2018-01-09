@@ -5,6 +5,10 @@ export const dbIdToNodeId = (tableName, dbId)=>{
     return `${tableName}:${dbId}`;
 };
 
+export const nodeIdToDbId = (nodeId) => {
+    return [tableName, dbId] = nodeId.split(":");
+}
+
 const makeSureIsArray = (e) => {
     if(Array.isArray(e)){
         return e;
@@ -21,7 +25,12 @@ export const getData = async (ids,modelName) => {
     ids = ids.map((id)=>{
         return mongoose.Types.ObjectId(id);
     });
-    return await models[modelName].find({'_id': {$in: ids}});
+    let elements = await models[modelName].find({'_id': {$in: ids}});
+    elements = elements.map((e)=>{
+        e.__modelName = modelName;
+        return e;
+    });
+    return elements;
 };
 
 // export const getArtists = async (ids) => {
