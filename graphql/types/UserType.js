@@ -5,6 +5,7 @@ import {SongType} from './SongType';
 import * as db from '../databaseAdapter';
 import {
     GraphQLObjectType,
+    GraphQLBoolean,
     GraphQLString,
     GraphQLInt,
     GraphQLID,
@@ -22,7 +23,7 @@ export const UserType = new GraphQLObjectType({
             }
         },
         emailValidated: {
-            type: GraphQLString
+            type: GraphQLBoolean
         },
         username: {
             type: new GraphQLNonNull(GraphQLInt),
@@ -40,36 +41,36 @@ export const UserType = new GraphQLObjectType({
             description: "Playlists created by this user",
             type: PlaylistType,
             resolve: (source, args, context)=>{
-                return db.getPlaylists(source.playlists)
+                return db.getData(source.playlists,PlaylistType)
             }
         },
         followedArtists: {
             description: "Artists followed by this user",
             type: ArtistType,
             resolve: (source, args, context)=>{
-                return db.getArtists(source.followedArtists);
+                return db.getData(source.followedArtists,ArtistType);
             }
         },
         listenedSongs: {
             description: "Songs listened by this user",
             type: SongType,
             resolve: (source, args, context)=>{
-                let songrels = source.listenedSongs;
+                let songrels = source.songRels;
                 songrels.filter((srel)=>{
                     return srel.type === "listened";
                 });
-                return db.getSongs(songrels);
+                return db.getData(songrels,SongType);
             }
         },
         likedSongs: {
             description: "Songs liked by this user",
             type: SongType,
             resolve: (source, args, context)=>{
-                let songrels = source.listenedSongs;
+                let songrels = source.songRels;
                 songrels.filter((srel)=>{
                     return srel.type === "liked";
                 });
-                return db.getSongs(songrels);
+                return db.getData(songrels,SongType);
             }
         }
     }

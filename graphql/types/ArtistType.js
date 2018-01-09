@@ -11,6 +11,7 @@ import {
     GraphQLID,
     GraphQLNonNull,
     GraphQLList,
+    GraphQlNumber
 } from 'graphql';
 
 export const ArtistType = new GraphQLObjectType({
@@ -20,16 +21,26 @@ export const ArtistType = new GraphQLObjectType({
         name: {
             type: new GraphQLNonNull(GraphQLString),
         },
-        descriptions: {
-            type: new GraphQLNonNull(GraphQLString),
+        avatar:{
+            type: GraphQLString
         },
+        age:{
+            type:GraphQlNumber
+        },
+        SingerType:{
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        descriptions: {
+            type: GraphQLString,
+        },
+
         songs: {
             type: SongType,
             resolve: (source, args, context)=>{
                 songsId = source.songs.map((songRel)=>{
                     return songRel.song;
                 });
-                return db.getSongs(songsId);
+                return db.getData(songsId,SongType);
             },
         },
     }
