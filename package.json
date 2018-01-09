@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "init": "npm i && cd client && npm i",
+    "seed": "node models/data_seeder/runSeed",
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
