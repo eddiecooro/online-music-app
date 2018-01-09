@@ -27,7 +27,7 @@ export const SongType = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLString),
         },
         description: {
-            type: new GraphQLString,
+            type: GraphQLString,
         },
         label: {
             type: GraphQLString,

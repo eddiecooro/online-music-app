@@ -9,6 +9,7 @@ import * as db from '../databaseAdapter';
 export const RootQuery = new GraphQLObjectType({
     name: "RootQuery",
     description: "the root query",
+    type: nodeInterface,
     fields: {
         node: {
             type: nodeInterface,
