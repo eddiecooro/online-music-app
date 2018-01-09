@@ -33,7 +33,16 @@ export const ArtistType = new GraphQLObjectType({
         descriptions: {
             type: GraphQLString,
         },
-
+        albums:{
+            type:AlbumType,
+            resolve:(source,args,context) =>{
+                var albumId = source.albums.map((albumRel) =>{
+                    return albumRel.album
+                })
+                
+                return db.getData(albumId,Artist)
+            }
+        },
         songs: {
             type: SongType,
             resolve: (source, args, context)=>{
