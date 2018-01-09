@@ -8,6 +8,8 @@ var PlaylistSchema = new Schema({
     cover:String,
     private: {type:Boolean, default:true},
     expireDate:Date
+}, {
+    timestamps: true;
 });
 
 PlaylistSchema.virtual('trackCount').get(

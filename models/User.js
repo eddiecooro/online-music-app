@@ -29,6 +29,7 @@ var UserSchema = new Schema({
     loginTime:Number
 }, {
     runSettersOnQuery: true,
+    timestamps: true;
 });
 
 UserSchema.pre('save', function(next){

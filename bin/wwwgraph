@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-
+require('babel-register');
 var app = require('../app-graph');
 var debug = require('debug')('online-music-app:server');
 var http = require('http');
