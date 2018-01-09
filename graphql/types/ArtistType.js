@@ -15,6 +15,7 @@ import {
 
 export const ArtistType = new GraphQLObjectType({
     name: "Artist",
+    interfaces: [nodeInterface],
     fields: {
         name: {
             type: new GraphQLNonNull(GraphQLString),

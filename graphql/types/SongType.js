@@ -15,6 +15,7 @@ import {
 
 export const SongType = new GraphQLObjectType({
     name: 'Song',
+    interfaces: [nodeInterface],
     feilds: {
         id: {
             type: new GraphQLNonNull(GraphQLID),

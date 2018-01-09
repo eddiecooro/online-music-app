@@ -13,6 +13,7 @@ import {
 
 export const UserType = new GraphQLObjectType({
     name: "User",
+    interfaces: [nodeInterface],
     fields: {
         id: {
             type: new GraphQLNonNull(GraphQLID),
