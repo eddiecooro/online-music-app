@@ -1,4 +1,7 @@
 import {nodeInterface} from './node.js';
+import {PlaylistType} from './PlaylistType';
+import {ArtistType} from './ArtistType';
+import {SongType} from './SongType';
 import * as utils from '../utils';
 import * as db from '../databaseAdapter';
 import {
