@@ -3,7 +3,8 @@ import *  as db from '../databaseAdapter'
 import {
     GraphQLObjectType,
     GraphQLNonNull,
-    GraphQLString
+    GraphQLString,
+    GraphQLID
 } from 'graphql'
 
 

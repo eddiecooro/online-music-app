@@ -4,7 +4,9 @@ import { GraphQLObjectType
     ,GraphQLString
     ,GraphQLNonNull
     ,GraphQLBoolean
-    ,GraphQLInt } from 'graphql';
+    ,GraphQLInt
+    ,GraphQLID 
+} from 'graphql';
 import { SongType } from './SongType';
 
 
