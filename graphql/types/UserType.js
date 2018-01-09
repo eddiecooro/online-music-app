@@ -2,7 +2,6 @@ import {nodeInterface} from './node.js';
 import {PlaylistType} from './PlaylistType';
 import {ArtistType} from './ArtistType';
 import {SongType} from './SongType';
-import * as utils from '../utils';
 import * as db from '../databaseAdapter';
 import {
     GraphQLObjectType,
@@ -19,7 +18,7 @@ const UserType = new GraphQLObjectType({
         id: {
             type: new GraphQLNonNull(GraphQLID),
             resolve: (source, _, _)=>{
-                return utils.dbIdToNodeId(source.constructor.modelName, source._id);
+                return db.dbIdToNodeId(source.constructor.modelName, source._id);
             }
         },
         emailValidated: {

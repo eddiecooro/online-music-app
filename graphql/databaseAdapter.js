@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 import * as models from '../models';
 
+export const dbIdToNodeId = (tableName, dbId)=>{
+    return `${tableName}:${dbId}`;
+};
+
 export const getPlaylists = async (ids) => {
     ids = ids.map((id)=>{
         return mongoose.Types.ObjectId(id);
