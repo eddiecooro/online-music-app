@@ -37,10 +37,10 @@ export const ArtistType = new GraphQLObjectType({
         songs: {
             type: SongType,
             resolve: (source, args, context)=>{
-                songsId = source.songs.map((songRel)=>{
+                let songIds = source.songs.map((songRel)=>{
                     return songRel.song;
                 });
-                return db.getData(songsId,"Song").then((data)=>{
+                return db.getData(songIds,"Song").then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)
