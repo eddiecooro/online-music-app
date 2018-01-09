@@ -4,12 +4,12 @@ var Schema = mongoose.Schema;
 
 var PlaylistSchema = new Schema({
     name:{type:String,require:true},
-    tracks:[Number],
+    tracks:[String], // song ids
     cover:String,
     private: {type:Boolean, default:true},
     expireDate:Date
 }, {
-    timestamps: true;
+    timestamps: true,
 });
 
 PlaylistSchema.virtual('trackCount').get(

@@ -10,7 +10,7 @@ var SongSchema = new mongoose.Schema({
     url: String,
     cover: String,
     rels: [{ rel:String, rel_id:Number }],
-    album: { type: Number },
+    albumId: { type: String },
     tags:[String]
 },{
     timestamps: true

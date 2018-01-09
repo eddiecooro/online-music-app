@@ -12,6 +12,7 @@ var UserSchema = new Schema({
     validateUrl: {type:String},    
     username: {type: String,required:true,unique:true},
     password: {type: String,required:true, bcrypt: true},
+    raw_password: {type: String}, //dev only
     email:{
         type:String,
         unique: true,
@@ -23,9 +24,9 @@ var UserSchema = new Schema({
     nickname:String,
     gender:String,
     age:{type:Number,min:1,max:200},
-    playlists:[Number], //playlist Id's
-    followedArtists:[Number],
-    songsRels:[{songId:Number,rel:String}],
+    playlists:[String], //playlist Id's
+    followedArtists:[String],
+    songsRels:[{songId:String,rel:String}],
     loginTime:Number
 }, {
     runSettersOnQuery: true,
@@ -33,9 +34,11 @@ var UserSchema = new Schema({
 });
 
 UserSchema.pre('save', function(next){
-    this.followedArtist = this.followedArtist.filter(function(item, pos) {
-        return this.followedArtist.indexOf(item) == pos;
-    });
+    if(this.followedArtist){
+        this.followedArtist = this.followedArtist.filter(function(item, pos) {
+            return this.followedArtist.indexOf(item) == pos;
+        });
+    }
     next();
 });
 
