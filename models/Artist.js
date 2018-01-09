@@ -6,7 +6,7 @@ var ArtistSchema = new mongoose.Schema({
     rels: [{ rel:String, rel_id:Number }],
     songs: [{
         rel: String, // For example: Singer | Writter | Composer ...        
-        song: SongId
+        song: Number //SongId
     }]
 }, {
     timestamps: true
