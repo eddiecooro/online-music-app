@@ -1,8 +1,4 @@
-// import {User} from './User';
-// import {Song} from './Song';
-// import {Artist} from './Artist';
-// import {Playlist} from './Playlist';
-import {User,Song,Artist,Playlist,Album} from './index';
+import {User,Song,Artist,Playlist,Album} from '../index';
 
 const Chance = require('chance');
 const chance = new Chance();
@@ -92,7 +88,7 @@ module.exports.createBase = ()=>{
     return saves;
 };
 
-module.exports.createBase = async function(){
+module.exports.makeRelations = async function(){
     console.log("Making Relations");
     let userCount = await User.count();
     let songCount = await Song.count();
@@ -101,64 +97,64 @@ module.exports.createBase = async function(){
     let playlistCount = await Playlist.count();
 
     // // Adding songs to Albums
-    // for(let i = 0;i < songCount;i++){
-    //     let currentSong = await Song.find().limit(-1).skip(i);
-    //     currentSong = currentSong[0];
-    //     let random = chance.integer({min:0,max:albumCount-1});
-    //     let album = await Album.findOne().skip(random);
-    //     let albumId = album._id;
+    for(let i = 0;i < songCount;i++){
+        let currentSong = await Song.find().limit(-1).skip(i);
+        currentSong = currentSong[0];
+        let random = chance.integer({min:0,max:albumCount-1});
+        let album = await Album.findOne().skip(random);
+        let albumId = album._id;
         
-    //     Song.update({_id:currentSong._id},{
-    //         albumId: albumId
-    //     }).then((w)=>{
-    //         console.log("Song Album Added");
-    //     }).catch((err)=>{
-    //         console.log("Song Album Update Failed");
-    //     });
-    // };
+        Song.update({_id:currentSong._id},{
+            albumId: albumId
+        }).then((w)=>{
+            console.log("Song Album Added");
+        }).catch((err)=>{
+            console.log("Song Album Update Failed");
+        });
+    };
 
     // // Adding song-artist Rels
-    // let possibleSongRels = ['Singer','Producer','Writter','Composer'];
-    // for(let i = 0;i < artistCount;i++){
-    //     let songs = [];
-    //     for(let j = 0;j < chance.integer({min:0,max:100});j++){
-    //         let random = chance.integer({min:0,max:songCount-1});
-    //         let song = await Song.findOne().skip(random);
-    //         let songId = song._id;
-    //         songs[j] = {
-    //             rel: possibleSongRels[chance.integer({min:0,max:possibleSongRels.length-1})],
-    //             song: songId
-    //         }
-    //     }
+    let possibleSongRels = ['Singer','Producer','Writter','Composer'];
+    for(let i = 0;i < artistCount;i++){
+        let songs = [];
+        for(let j = 0;j < chance.integer({min:0,max:100});j++){
+            let random = chance.integer({min:0,max:songCount-1});
+            let song = await Song.findOne().skip(random);
+            let songId = song._id;
+            songs[j] = {
+                rel: possibleSongRels[chance.integer({min:0,max:possibleSongRels.length-1})],
+                song: songId
+            }
+        }
 
-    //     let currentArtist = await Artist.find().limit(-1).skip(i);
-    //     currentArtist = currentArtist[0];
-    //     currentArtist.songs = songs;
-    //     Artist.update({_id:currentArtist._id},currentArtist).then((w)=>{
-    //         console.log("Artist Song Added");
-    //     }).catch((err)=>{
-    //         console.log("Artist Song Update Failed");
-    //     });
-    // }
+        let currentArtist = await Artist.find().limit(-1).skip(i);
+        currentArtist = currentArtist[0];
+        currentArtist.songs = songs;
+        Artist.update({_id:currentArtist._id},currentArtist).then((w)=>{
+            console.log("Artist Song Added");
+        }).catch((err)=>{
+            console.log("Artist Song Update Failed");
+        });
+    }
 
     // Adding songs to playlists
-    // for(let i = 0;i < playlistCount;i++){
-    //     let tracks = [];
-    //     for(let j = 0;j < chance.integer({min:0,max:100});j++){
-    //         let random = chance.integer({min:0,max:songCount-1});
-    //         let song = await Song.findOne().skip(random);
-    //         let songId = song._id;
-    //         tracks[j] = songId;
-    //     }
-    //     let currentPl = await Playlist.find().limit(-1).skip(i);
-    //     currentPl = currentPl[0];
-    //     currentPl.tracks = tracks;
-    //     Playlist.update({_id:currentPl._id},currentPl).then((w)=>{
-    //         console.log("Playlist Track Added");
-    //     }).catch((err)=>{
-    //         console.log("Playlist Track Update Failed");
-    //     });
-    // }
+    for(let i = 0;i < playlistCount;i++){
+        let tracks = [];
+        for(let j = 0;j < chance.integer({min:0,max:100});j++){
+            let random = chance.integer({min:0,max:songCount-1});
+            let song = await Song.findOne().skip(random);
+            let songId = song._id;
+            tracks[j] = songId;
+        }
+        let currentPl = await Playlist.find().limit(-1).skip(i);
+        currentPl = currentPl[0];
+        currentPl.tracks = tracks;
+        Playlist.update({_id:currentPl._id},currentPl).then((w)=>{
+            console.log("Playlist Track Added");
+        }).catch((err)=>{
+            console.log("Playlist Track Update Failed");
+        });
+    }
 
     // Adding user created playlists
     let possibleUserSongRels = ['listened','liked','hated'];
