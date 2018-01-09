@@ -11,6 +11,7 @@ import {
     GraphQLID,
     GraphQLNonNull,
     GraphQLList,
+    GraphQlNumber
 } from 'graphql';
 
 export const ArtistType = new GraphQLObjectType({
@@ -20,16 +21,39 @@ export const ArtistType = new GraphQLObjectType({
         name: {
             type: new GraphQLNonNull(GraphQLString),
         },
+        avatar:{
+            type: GraphQLString
+        },
+        age:{
+            type:GraphQlNumber
+        },
+        SingerType:{
+            type: new GraphQLNonNull(GraphQLString)
+        },
         descriptions: {
-            type: new GraphQLNonNull(GraphQLString),
+            type: GraphQLString,
+        },
+        albums:{
+            type:AlbumType,
+            resolve:(source,args,context) =>{
+                var albumId = source.albums.map((albumRel) =>{
+                    return albumRel.album
+                })
+                
+                return db.getData(albumId,Artist)
+            }
         },
         songs: {
             type: SongType,
             resolve: (source, args, context)=>{
-                songsId = source.songs.map((songRel)=>{
+                let songIds = source.songs.map((songRel)=>{
                     return songRel.song;
                 });
-                return db.getSongs(songsId);
+                return db.getData(songIds,"Song").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             },
         },
     }

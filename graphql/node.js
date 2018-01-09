@@ -6,8 +6,7 @@ import {
 export const nodeInterface = new GraphQLInterfaceType({
     name: 'Node',
     resolveType: (source) =>{
-        mName = source.constructor.modelName;
-        switch(mName){
+        switch(source.__modelName){
             case "User":
                 return types.UserType;
                 break;

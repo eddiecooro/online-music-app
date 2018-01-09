@@ -47,7 +47,11 @@ export const SongType = new GraphQLObjectType({
         album: {
             type: AlbumType,
             resolve: (source, args, context)=>{
-                return db.getAlbums(source.album)
+                return db.getData(source.album,"Album").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             }
         },
         tags: {
