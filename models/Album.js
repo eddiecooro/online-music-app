@@ -5,7 +5,7 @@ var AlbumSchema = new mongoose.Schema({
     cover: String,
     releaseData: Date,
 }, {
-    timestamps: true;
+    timestamps: true
 });
 
 export const Album = mongoose.model('Album', AlbumSchema);
