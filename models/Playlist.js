@@ -16,4 +16,4 @@ PlaylistSchema.virtual('trackCount').get(
     function(){ return this.tracks.length }
 );
 
-module.exports = mongoose.model("Playlist",PlaylistSchema);
+export const Playlist = mongoose.model("Playlist",PlaylistSchema);

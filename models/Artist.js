@@ -12,5 +12,4 @@ var ArtistSchema = new mongoose.Schema({
     timestamps: true
 });
 
-
-module.exports = mongoose.model("Artist", ArtistSchema);
+export const Artist = mongoose.model('Artist', ArtistSchema);

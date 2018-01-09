@@ -23,13 +23,13 @@ var UserSchema = new Schema({
     nickname:String,
     gender:String,
     age:{type:Number,min:1,max:200},
-    playlist:[Number], //playlist Id's
-    followedArtist:[Number],
-    songsRel:[{songId:Number,rel:String}],
+    playlists:[Number], //playlist Id's
+    followedArtists:[Number],
+    songsRels:[{songId:Number,rel:String}],
     loginTime:Number
 }, {
     runSettersOnQuery: true,
-    timestamps: true;
+    timestamps: true,
 });
 
 UserSchema.pre('save', function(next){
@@ -41,4 +41,4 @@ UserSchema.pre('save', function(next){
 
 UserSchema.plugin(mb, {rounds: 10});
 
-module.exports = mongoose.model("User", UserSchema);
+export const User = mongoose.model("User", UserSchema);

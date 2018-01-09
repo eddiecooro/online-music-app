@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var AlbumsSchema = new mongoose.Schema({
+var AlbumSchema = new mongoose.Schema({
     name: String,
     cover: String,
     releaseData: Date,
@@ -8,4 +8,4 @@ var AlbumsSchema = new mongoose.Schema({
     timestamps: true;
 });
 
-module.exports = mongoose.model('Album', AlbumsSchema);
+export const Album = mongoose.model('Album', AlbumSchema);
