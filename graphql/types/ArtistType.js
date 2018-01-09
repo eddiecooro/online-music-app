@@ -46,7 +46,7 @@ export const ArtistType = new GraphQLObjectType({
                     return albumRel.album
                 })
                 
-                return db.getData(albumId,Artist)
+                return db.getData("Album",albumId)
             }
         },
         songs: {
@@ -55,7 +55,7 @@ export const ArtistType = new GraphQLObjectType({
                 let songIds = source.songs.map((songRel)=>{
                     return songRel.song;
                 });
-                return db.getData(songIds,"Song").then((data)=>{
+                return db.getData("Song",songIds).then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)

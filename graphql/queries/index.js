@@ -5,6 +5,7 @@ import {
 } from 'graphql';
 import {nodeInterface} from '../node';
 import * as db from '../databaseAdapter';
+import { nodeIdToDbId } from '../databaseAdapter';
 
 export const RootQuery = new GraphQLObjectType({
     name: "RootQuery",
@@ -19,7 +20,8 @@ export const RootQuery = new GraphQLObjectType({
                 }
             },
             resolve(source,args) {
-                return db.getData(db.nodeIdToDbId(args.id)).then((data)=>{
+                return db.getData(...db.nodeIdToDbId(args.id)).then((data)=>{
+                    // console.log(data);
                     return data;
                 }).catch((err)=>{
                     console.log(err);

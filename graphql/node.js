@@ -11,7 +11,7 @@ export const nodeInterface = new GraphQLInterfaceType({
             type: GraphQLID,
         },
     },
-    resolveType: (source) =>{
+    resolveType: (source) => {
         switch(source.__modelName){
             case "User":
                 return types.UserType;

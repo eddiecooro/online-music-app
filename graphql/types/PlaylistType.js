@@ -27,7 +27,7 @@ export const PlayListType = new GraphQLObjectType({
             type:SongType,
             resolve: (root,args,context) =>{
                 songId = root.tracks
-                return db.getData(songId,Song) 
+                return db.getData("Song",songId) 
             }
         },
         cover:{

@@ -12,7 +12,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-export const UserType = new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
     name: "User",
     interfaces: [nodeInterface],
     fields: {
@@ -41,7 +41,7 @@ export const UserType = new GraphQLObjectType({
             description: "Playlists created by this user",
             type: PlaylistType,
             resolve: (source, args, context)=>{
-                return db.getData(source.playlists,"Playlist").then((data)=>{
+                return db.getData("Playlist",source.playlists).then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)
@@ -52,7 +52,7 @@ export const UserType = new GraphQLObjectType({
             description: "Artists followed by this user",
             type: ArtistType,
             resolve: (source, args, context)=>{
-                return db.getData(source.followedArtists,"Artist").then((data)=>{
+                return db.getData("Artist",source.followedArtists).then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)
@@ -64,10 +64,10 @@ export const UserType = new GraphQLObjectType({
             type: SongType,
             resolve: (source, args, context)=>{
                 let songrels = source.songRels;
-                songrels.filter((srel)=>{
+                let listeneds = songrels.filter((srel)=>{
                     return srel.type === "listened";
                 });
-                return db.getData(songrels,"Song").then((data)=>{
+                return db.getData("Song",listeneds).then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)
@@ -79,10 +79,10 @@ export const UserType = new GraphQLObjectType({
             type: SongType,
             resolve: (source, args, context)=>{
                 let songrels = source.songRels;
-                songrels.filter((srel)=>{
+                let likeds = songrels.filter((srel)=>{
                     return srel.type === "liked";
                 });
-                return db.getData(songrels,"Song").then((data)=>{
+                return db.getData("Song",likeds).then((data)=>{
                     return data
                 }).catch((err)=>{
                     console.log(err)
