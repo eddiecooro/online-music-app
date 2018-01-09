@@ -17,8 +17,7 @@ mongoose.connect('mongodb://localhost/onlineMusicApp').then(() =>{
 mongoose.Promise = global.Promise;
 
 var index = require('./routes/index');
-var users = require('./schemas/users');
-var playlist = require('./routes/playlist');
+import graphqlSchema from './graphql';
 
 var app = express();
 
@@ -36,8 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', graphqlHttp({ schema: users, graphiql:true,pretty:true }) );
-app.use('/playlist', playlist);
+app.use('/graphql', graphqlHttp({ schema: graphqlSchema, graphiql:true,pretty:true }) );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
