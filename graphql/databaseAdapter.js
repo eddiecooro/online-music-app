@@ -13,12 +13,15 @@ const makeSureIsArray = (e) => {
     }
 };
 
-export const getData = async (ids,ModelName) => {
+// Gets a modelName and array of ids and return a promise(because this is an async function)
+// That resolves by an array of jsons from the model specified by modelName
+export const getData = async (ids,modelName) => {
     makeSureIsArray(ids);
+    let model = getModelByName(modelName);
     ids = ids.map((id)=>{
         return mongoose.Types.ObjectId(id);
     });
-    return await models.ModelName.find({'_id': {$in: ids}});
+    return await models[modelName].find({'_id': {$in: ids}});
 };
 
 // export const getArtists = async (ids) => {

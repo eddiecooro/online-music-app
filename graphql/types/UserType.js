@@ -41,14 +41,22 @@ export const UserType = new GraphQLObjectType({
             description: "Playlists created by this user",
             type: PlaylistType,
             resolve: (source, args, context)=>{
-                return db.getData(source.playlists,PlaylistType)
+                return db.getData(source.playlists,"Playlist").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         followedArtists: {
             description: "Artists followed by this user",
             type: ArtistType,
             resolve: (source, args, context)=>{
-                return db.getData(source.followedArtists,ArtistType);
+                return db.getData(source.followedArtists,"Artist").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             }
         },
         listenedSongs: {
@@ -59,7 +67,11 @@ export const UserType = new GraphQLObjectType({
                 songrels.filter((srel)=>{
                     return srel.type === "listened";
                 });
-                return db.getData(songrels,SongType);
+                return db.getData(songrels,"Song").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             }
         },
         likedSongs: {
@@ -70,7 +82,11 @@ export const UserType = new GraphQLObjectType({
                 songrels.filter((srel)=>{
                     return srel.type === "liked";
                 });
-                return db.getData(songrels,SongType);
+                return db.getData(songrels,"Song").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             }
         }
     }

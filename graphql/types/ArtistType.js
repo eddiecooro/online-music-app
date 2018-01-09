@@ -40,7 +40,11 @@ export const ArtistType = new GraphQLObjectType({
                 songsId = source.songs.map((songRel)=>{
                     return songRel.song;
                 });
-                return db.getData(songsId,SongType);
+                return db.getData(songsId,"Song").then((data)=>{
+                    return data
+                }).catch((err)=>{
+                    console.log(err)
+                });
             },
         },
     }
