@@ -3,7 +3,7 @@ import {
     GraphQLNonNull,
     GraphQLString,
 } from 'graphql';
-import nodeInterface from '../node';
+import {nodeInterface} from '../node';
 import * as db from '../databaseAdapter';
 
 export const RootQuery = new GraphQLObjectType({

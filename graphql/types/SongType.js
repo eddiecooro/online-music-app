@@ -20,7 +20,7 @@ export const SongType = new GraphQLObjectType({
         id: {
             type: new GraphQLNonNull(GraphQLID),
             resolve: (source, args, context)=>{
-                return db.dbIdToNodeId(source.constructor.modelName, source._id);
+                return db.dbIdToNodeId(source.__modelName, source._id);
             }
         },
         name: {

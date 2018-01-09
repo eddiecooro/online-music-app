@@ -18,6 +18,12 @@ export const ArtistType = new GraphQLObjectType({
     name: "Artist",
     interfaces: [nodeInterface],
     fields: {
+        id: {
+            type: new GraphQLNonNull(GraphQLID),
+            resolve: (source, args, context)=>{
+                return db.dbIdToNodeId(source.__modelName, source._id);
+            }
+        },
         name: {
             type: new GraphQLNonNull(GraphQLString),
         },

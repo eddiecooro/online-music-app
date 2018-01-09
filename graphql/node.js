@@ -1,10 +1,16 @@
 import * as types from './types';
 import {
     GraphQLInterfaceType,
+    GraphQLID,
 } from 'graphql';
 
 export const nodeInterface = new GraphQLInterfaceType({
     name: 'Node',
+    fields: {
+        id: {
+            type: GraphQLID,
+        },
+    },
     resolveType: (source) =>{
         switch(source.__modelName){
             case "User":
