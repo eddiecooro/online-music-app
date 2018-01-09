@@ -24,9 +24,9 @@ var UserSchema = new Schema({
     nickname:String,
     gender:String,
     age:{type:Number,min:1,max:200},
-    playlists:[Number], //playlist Id's
-    followedArtists:[Number],
-    songsRels:[{songId:Number,rel:String}],
+    playlists:[String], //playlist Id's
+    followedArtists:[String],
+    songsRels:[{songId:String,rel:String}],
     loginTime:Number
 }, {
     runSettersOnQuery: true,
