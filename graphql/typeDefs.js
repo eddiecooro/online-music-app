@@ -22,8 +22,8 @@ export const typeDefs = `
 
     type Playlist implements Node {
         id: ID!
-        name: String
-        tracks: Song
+        name: String!
+        tracks: Song!
         cover: String
         private: Boolean
         expireDate: String
@@ -32,7 +32,7 @@ export const typeDefs = `
 
     type Album implements Node {
         id: ID!
-        name: String
+        name: String!
         cover: String
         releaseDate: String
     }
@@ -44,7 +44,7 @@ export const typeDefs = `
         label: String
         genre: [String]
         releaseDate: String
-        url: String
+        url: String!
         cover: String
         album: Album
         tags: [String]
@@ -52,12 +52,12 @@ export const typeDefs = `
 
     type Artist implements Node {
         id: ID!
-        name: String
+        name: String!
         description: String
         avatar: String
         age: Int
         albums: Album
-        songs: Song
+        songs: Song!
     }
 
 `
