@@ -180,7 +180,7 @@ module.exports.makeRelations = async function(){
             let songId = song._id;
             songRels[j] = {
                 rel: possibleUserSongRels[chance.integer({min:0,max:possibleUserSongRels.length-1})],
-                song: songId
+                songId: songId
             }
         }
 
@@ -189,7 +189,6 @@ module.exports.makeRelations = async function(){
         currentUser.songsRels = songRels;
 
         User.update({_id:currentUser._id},currentUser).then((w)=>{
-            console.log(w);
             console.log("User Relations Added");
         }).catch((err)=>{
             console.log("User Relations Update Failed");

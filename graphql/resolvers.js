@@ -37,9 +37,16 @@ export const resolvers = {
         listenedSongs: (source, args, context)=>{
             let songrels = source.songsRels;
             let listeneds = songrels.filter((srel)=>{
+<<<<<<< HEAD
                 return srel.rel == "listened";
+=======
+                return srel.rel === "listened";
+>>>>>>> ca4d1d7af06f813781c42cfe3bd9b78a7cbdd1c1
             });
-            return db.getData("Song",listeneds).then((data)=>{
+            let listenedIds = listeneds.map((listened)=>{
+                return listened.songId;
+            });
+            return db.getData("Song",listenedIds).then((data)=>{
                 return data
             }).catch((err)=>{
                 console.log(err)
@@ -51,7 +58,7 @@ export const resolvers = {
                 return srel.rel === "liked";
             });
             let likedIds = likeds.map((liked)=>{
-                return liked._id;
+                return liked.songId;
             });
             return db.getData("Song",likedIds).then((data)=>{
                 // console.log(data);
