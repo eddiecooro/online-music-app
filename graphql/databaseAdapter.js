@@ -25,6 +25,7 @@ export const getData = async (modelName,ids) => {
         return mongoose.Types.ObjectId(id);
     });
     let elements = await models[modelName].find({'_id': {$in: ids}});
+    makeSureIsArray(elements)
     elements = elements.map((e)=>{
         e = e.toObject();
         e.__modelName = modelName;

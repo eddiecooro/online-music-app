@@ -14,16 +14,16 @@ export const typeDefs = `
         email: String!
         avatar: String
         age: Int
-        playlists: Playlist
-        followedArtists: Artist
-        listenedSongs: Song
-        likedSongs: Song
+        playlists: [Playlist]
+        followedArtists: [Artist]
+        listenedSongs: [Song]
+        likedSongs: [Song]
     }
 
     type Playlist implements Node {
         id: ID!
         name: String
-        tracks: Song
+        tracks: [Song]
         cover: String
         private: Boolean
         expireDate: String
@@ -40,8 +40,7 @@ export const typeDefs = `
     type Song implements Node {
         id: ID!
         name: String!
-        descriptions: String
-        label: String
+        description: String
         genre: [String]
         releaseDate: String
         url: String
@@ -56,8 +55,8 @@ export const typeDefs = `
         description: String
         avatar: String
         age: Int
-        albums: Album
-        songs: Song
+        albums: [Album]
+        songs: [Song]
     }
 
 `

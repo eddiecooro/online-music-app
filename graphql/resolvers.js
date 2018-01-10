@@ -21,11 +21,11 @@ export const resolvers = {
             return db.dbIdToNodeId(source.__modelName, source._id);
         },
         playlists: (source, args, context)=>{
-            return db.getData("Playlist",source.playlists).then((data)=>{
+             return db.getData("Playlist",source.playlists).then((data) => {
                 return data
-            }).catch((err)=>{
+            }).catch((err) =>{
                 console.log(err)
-            })
+            });
         },
         followedArtists: (source, args, context)=>{
             return db.getData("Artist",source.followedArtists).then((data)=>{
@@ -54,7 +54,7 @@ export const resolvers = {
                 return liked._id;
             });
             return db.getData("Song",likedIds).then((data)=>{
-                console.log(data);
+                // console.log(data);
                 return data
             }).catch((err)=>{
                 console.log(err)
@@ -65,8 +65,9 @@ export const resolvers = {
         id: (source, args, context)=>{
             return db.dbIdToNodeId(source.__modelName, source._id);
         },
+        
         tracks: (root,args,context) =>{
-            songId = root.tracks
+            var songId = root.tracks
             return db.getData("Song",songId) 
         },
         trackCount: (root,args,context) =>{
@@ -83,11 +84,16 @@ export const resolvers = {
             return db.dbIdToNodeId(source.__modelName, source._id);
         },
         album: (source, args, context)=>{
-            return db.getData("Album",source.album).then((data)=>{
+            // console.log(source)
+            return db.getData("Album",source.albumId).then((data)=>{
                 return data
             }).catch((err)=>{
                 console.log(err)
             });
+        },
+        releaseDate:(source,args,context) =>{
+            console.log(source)
+            // return source.releaseDate.toString();
         }
     },
     Artist: {
