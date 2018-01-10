@@ -12,6 +12,8 @@ var PlaylistSchema = new Schema({
     timestamps: true,
 });
 
+PlaylistSchema.index({name:'text'});
+
 PlaylistSchema.virtual('trackCount').get(
     function(){ return this.tracks.length }
 );

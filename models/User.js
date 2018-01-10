@@ -33,6 +33,8 @@ var UserSchema = new Schema({
     timestamps: true,
 });
 
+UserSchema.index({nickname:'text',email:'text'});
+
 UserSchema.pre('save', function(next){
     if(this.followedArtist){
         this.followedArtist = this.followedArtist.filter(function(item, pos) {

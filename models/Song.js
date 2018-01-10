@@ -15,4 +15,6 @@ var SongSchema = new mongoose.Schema({
     timestamps: true
 });
 
+SongSchema.index({name:'text',lyrics:'text'});
+
 export const Song = mongoose.model("Song",SongSchema);
