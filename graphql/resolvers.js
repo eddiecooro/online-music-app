@@ -37,7 +37,7 @@ export const resolvers = {
         listenedSongs: (source, args, context)=>{
             let songrels = source.songsRels;
             let listeneds = songrels.filter((srel)=>{
-                return srel.type === "listened";
+                return srel.rel == "listened";
             });
             return db.getData("Song",listeneds).then((data)=>{
                 return data
@@ -91,10 +91,7 @@ export const resolvers = {
                 console.log(err)
             });
         },
-        releaseDate:(source,args,context) =>{
-            console.log(source)
-            // return source.releaseDate.toString();
-        }
+        
     },
     Artist: {
         id: (source, args, context)=>{
