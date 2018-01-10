@@ -190,9 +190,7 @@ module.exports.makeRelations = async function(){
         currentUser.playlists = playlists;
         currentUser.followedArtists = fArtists;
         currentUser.songsRels = songRels;
-
         User.update({_id:currentUser._id},currentUser).then((w)=>{
-            console.log(w);
             console.log("User Relations Added");
         }).catch((err)=>{
             console.log("User Relations Update Failed");

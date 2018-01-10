@@ -7,7 +7,6 @@ export const dbIdToNodeId = (tableName, dbId)=>{
 
 export const nodeIdToDbId = (nodeId) => {
     return nodeId.split(":");
-
 }
 
 const makeSureIsArray = (e) => {
@@ -22,20 +21,12 @@ const makeSureIsArray = (e) => {
 // That resolves by an array of jsons from the model specified by modelName
 export const getData = async (modelName,ids) => {
     ids = makeSureIsArray(ids);
-    console.log("This Is What You Want:\t\t\t" + ids)
-    var new_ids = ids.map((id)=>{
+    ids = ids.map((id)=>{
         return mongoose.Types.ObjectId(id);
     });
-    console.log("This Is What You Want:\t\t\t" + new_ids)
-    let elements = []
-    for (let e of new_ids){
-         let result = await models[modelName].find(e)
-        elements.push(result)
-        
-    }
-    // let elements = await models[modelName].find({'_id': {$in: ids}});
+    let elements = await models[modelName].find({'_id': {$in: ids}});
     elements = elements.map((e)=>{
-        // e = e.toObject();
+        e = e.toObject();
         e.__modelName = modelName;
         return e;
     });

@@ -3,8 +3,7 @@ import * as db from './databaseAdapter';
 export const resolvers = {
     Query: {
         node:(source,args,context)=>{
-            return db.getData(...db.nodeIdToDbId(args.id))
-            .then((data)=>{
+            return db.getData(...db.nodeIdToDbId(args.id)).then((data)=>{
                 // console.log(data);
                 return data;
             }).catch((err)=>{
@@ -19,7 +18,7 @@ export const resolvers = {
     },
     User: {
         id: (source, args, context)=>{
-            return db.dbIdToNodeId(source.__modelName, source[0]._id);
+            return db.dbIdToNodeId(source.__modelName, source._id);
         },
         playlists: (source, args, context)=>{
             return db.getData("Playlist",source.playlists).then((data)=>{
@@ -55,7 +54,7 @@ export const resolvers = {
                 return liked._id;
             });
             return db.getData("Song",likedIds).then((data)=>{
-                // console.log(data);
+                console.log(data);
                 return data
             }).catch((err)=>{
                 console.log(err)
