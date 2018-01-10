@@ -5,7 +5,7 @@ var SongSchema = new mongoose.Schema({
     description: String,
     genre: [String],
     lyrics: [String],
-    releaseData: Date,
+    releaseDate: Date,
     url: String,
     cover: String,
     rels: [{ rel:String, rel_id:Number }],
