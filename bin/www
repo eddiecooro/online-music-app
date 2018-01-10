@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
+// importing babel for async/await and es5 import support
+require('babel-register');
+require('babel-polyfill');
+
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
+var app = require('../app-graph');
 var debug = require('debug')('online-music-app:server');
 var http = require('http');
 
