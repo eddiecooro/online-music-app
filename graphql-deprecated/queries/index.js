@@ -3,17 +3,15 @@ import {
     GraphQLNonNull,
     GraphQLString,
 } from 'graphql';
-import {nodeInterface} from '../node';
+import {NodeInterface} from '../types';
 import * as db from '../databaseAdapter';
-import { nodeIdToDbId } from '../databaseAdapter';
 
 export const RootQuery = new GraphQLObjectType({
     name: "RootQuery",
     description: "the root query",
-    type: nodeInterface,
     fields: {
         node: {
-            type: nodeInterface,
+            type: NodeInterface,
             args: {
                 id: {
                     type: new GraphQLNonNull(GraphQLString),
@@ -30,3 +28,14 @@ export const RootQuery = new GraphQLObjectType({
         }
     }
 });
+// export const RootQuery = new GraphQLObjectType({
+//     name: "Hello",
+//     fields: {
+//         node: {
+//             type: GraphQLString,
+//             resolve(){
+//                 return "Hello"
+//             }
+//         }
+//     }
+// })

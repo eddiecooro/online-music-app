@@ -1,32 +1,39 @@
-import * as types from './types';
+import {
+    UserType,
+    ArtistType,
+    AlbumType,
+    PlaylistType,
+    SongType
+} from './types';
 import {
     GraphQLInterfaceType,
+    GraphQLNonNull,
     GraphQLID,
 } from 'graphql';
 
-export const nodeInterface = new GraphQLInterfaceType({
+export const NodeInterface = new GraphQLInterfaceType({
     name: 'Node',
     fields: {
         id: {
-            type: GraphQLID,
+            type: new GraphQLNonNull(GraphQLID),
         },
     },
     resolveType: (source) => {
         switch(source.__modelName){
             case "User":
-                return types.UserType;
+                return UserType;
                 break;
             case "Album":
-                return types.AlbumType;
+                return AlbumType;
                 break;
             case "Artist":
-                return types.ArtistType;
+                return ArtistType;
                 break;
             case "Playlist":
-                return types.PlaylistType;
+                return PlaylistType;
                 break;
             case "Song":
-                return types.SongType;
+                return SongType;
                 break;
         }
         return null;
