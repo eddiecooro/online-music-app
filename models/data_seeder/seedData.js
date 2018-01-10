@@ -38,18 +38,15 @@ module.exports.createBase = ()=>{
 
     for(let i = 0;i < 1000;i++){
         let genre = [];
-        let label = [];
         for(let i = 0;i < 10;i++){
             if(chance.bool()){
                 genre.push(chance.word());
-                label.push(chance.word());
             }
         }
         var newSong = new Song({
             name: chance.first(),
             description: chance.paragraph(),
             genre: genre,
-            label: label,
             lyrics: [chance.paragraph()],
             releaseDate: chance.date(),
             cover: chance.avatar({protocol:'https',fileExtension:'jpg'}),

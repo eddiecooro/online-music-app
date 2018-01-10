@@ -4,7 +4,6 @@ var SongSchema = new mongoose.Schema({
     name: String,
     description: String,
     genre: [String],
-    label: [String],
     lyrics: [String],
     releaseData: Date,
     url: String,
