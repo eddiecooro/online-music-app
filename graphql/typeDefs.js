@@ -55,6 +55,7 @@ export const typeDefs = `
         description: String
         avatar: String
         age: Int
+        SingerType: String
         albums: [Album]
         songs: [Song]
     }
