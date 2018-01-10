@@ -5,6 +5,8 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const graphql = require('graphql');
+const graphqlHttp = require('express-graphql');
 // adding helmet secury middleware
 const helmet = require('helmet');
 
@@ -15,8 +17,7 @@ mongoose.connect('mongodb://localhost/onlineMusicApp').then(() =>{
 mongoose.Promise = global.Promise;
 
 var index = require('./routes/index');
-var users = require('./routes/users');
-var playlist = require('./routes/playlist')
+import graphqlSchema from './graphql';
 
 var app = express();
 
@@ -34,8 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
-app.use('/playlist', playlist);
+app.use('/graphql', graphqlHttp({ schema: graphqlSchema, graphiql:true,pretty:true }) );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,5 +54,12 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+process.on('SIGINT', function() {  
+  mongoose.connection.close(function () { 
+    console.log('Mongoose default connection disconnected through app termination'); 
+    process.exit(0); 
+  }); 
+}); 
 
 module.exports = app;
