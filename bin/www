@@ -7,7 +7,7 @@ require('babel-polyfill');
 /**
  * Module dependencies.
  */
-var app = require('../app-graph');
+var app = require('../app');
 var debug = require('debug')('online-music-app:server');
 var http = require('http');
 
