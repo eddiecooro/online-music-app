@@ -13,10 +13,19 @@ module.exports = {
                 console.log(err)
             });
         },
-
         artists: (source, args, context) => {
             return context.getData_Id("Artist",context.getArtist_SongId).then((data) => {
                 if (!Array.isArray(data)) {
+                    data = [data]
+                }
+                return data
+            }).catch((err) => {
+                console.log(err)
+            });
+        },
+        playlist: (source,args,context) =>{
+            return context.getPlaylist_SongId("Playlist",source._id).then((data) =>{
+                if(!Array.isArray(data)){
                     data = [data]
                 }
                 return data

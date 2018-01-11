@@ -47,6 +47,22 @@ module.exports  = {
             }).catch((err) => {
                 console.log(err)
             });
+
         },
+        hatedSongs:(source,args,context) =>{
+            //songRel like => {rel:"liked",songId:"jlk23132980dd"}
+            let songrels = source.songsRels;
+            let likeds = songrels.filter((srel) => {
+                return srel.rel === "hated";
+            });
+            let likedIds = likeds.map((liked) => {
+                return liked.songId;
+            });
+            return context.getData_Id("Song", likedIds).then((data) => {
+                return data
+            }).catch((err) => {
+                console.log(err)
+            });
+        }
     }
 }

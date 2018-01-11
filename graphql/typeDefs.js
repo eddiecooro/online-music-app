@@ -18,6 +18,7 @@ export const typeDefs = `
         followedArtists: [Artist]
         listenedSongs: [Song]
         likedSongs: [Song]
+        hatedSongs: [Song]
     }
 
     type Playlist implements Node {
@@ -50,6 +51,7 @@ export const typeDefs = `
         album: Album
         tags: [String]
         artists: [Artist]
+        playlist: [Playlist]
     }
 
     type Artist implements Node {
