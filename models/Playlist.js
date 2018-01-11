@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
@@ -11,6 +11,8 @@ var PlaylistSchema = new Schema({
 }, {
     timestamps: true,
 });
+
+PlaylistSchema.index({name:'text'});
 
 PlaylistSchema.virtual('trackCount').get(
     function(){ return this.tracks.length }

@@ -1,6 +1,7 @@
 export const typeDefs = `
     type Query {
         node(id:ID!): Node
+        search(text: String!): [Node]
     }
 
     interface Node{
@@ -12,6 +13,7 @@ export const typeDefs = `
         emailValidated: Boolean
         username: String!
         email: String!
+        nickname: String
         avatar: String
         age: Int
         playlists: [Playlist]
@@ -41,6 +43,7 @@ export const typeDefs = `
         id: ID!
         name: String!
         description: String
+        lyrics: [String]
         genre: [String]
         releaseDate: String
         url: String

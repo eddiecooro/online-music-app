@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 var SongSchema = new mongoose.Schema({
     name: String,
@@ -14,5 +14,7 @@ var SongSchema = new mongoose.Schema({
 },{
     timestamps: true
 });
+
+SongSchema.index({name:'text',lyrics:'text'});
 
 export const Song = mongoose.model("Song",SongSchema);

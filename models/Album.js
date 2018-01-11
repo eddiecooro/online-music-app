@@ -8,4 +8,6 @@ var AlbumSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+AlbumSchema.index({name:'text'});
+
 export const Album = mongoose.model('Album', AlbumSchema);

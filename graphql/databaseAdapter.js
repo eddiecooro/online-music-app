@@ -1,3 +1,4 @@
+import Fuse from 'fuse.js';
 import mongoose from 'mongoose';
 import * as models from '../models';
 
@@ -33,3 +34,33 @@ export const getData = async (modelName,ids) => {
     });
     return elements.length == 1 ? elements[0] : elements;
 };
+
+// Args: 
+//    modelNames: models to search between
+//    text: text to search inside models
+// Returns:
+//    search results from models sorted by search score
+export const search = async (modelNames, text) => {
+    let results = [];
+    let resultPromises = [];
+    
+    modelNames.forEach(async (mName) => {
+        try{
+            let model = models[mName];
+            resultPromises.push(model.find({$text:{$search:text}},{score:{$meta:"textScore"}}).then((datas)=>{
+                datas.forEach((data)=>{
+                    data.__modelName = mName;
+                    results.push(data);
+                });
+            }));
+        } catch(e){
+            console.log(e);
+        }
+    });
+    return Promise.all(resultPromises).then(()=>{
+        results = results.sort((a,b)=>{
+            return(a.score > b.score);
+        })
+        return results;
+    })
+}
