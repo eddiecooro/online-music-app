@@ -46,17 +46,10 @@ export const resolvers = {
             let songrels = source.songsRels;
             let listeneds = songrels.filter((srel)=>{
                 return srel.rel === "listened";
-<<<<<<< HEAD
             });
             let listenedIds = listeneds.map((listened)=>{
                 return listened.songId;
             });
-=======
-            });
-            let listenedIds = listeneds.map((listened)=>{
-                return listened.songId;
-            });
->>>>>>> refs/remotes/origin/bug-fix
             return db.getData("Song",listenedIds).then((data)=>{
                 return data
             }).catch((err)=>{
