@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-const mb = require('mongoose-bcrypt');
+const bcrypt = require("bcrypt");
 var Schema = mongoose.Schema;
 
 function validateEmail(email) {
@@ -10,8 +10,16 @@ function validateEmail(email) {
 var UserSchema = new Schema({
     emailValidated: {type:Boolean,default:false},
     validateUrl: {type:String},    
-    username: {type: String,required:true,unique:true},
-    password: {type: String,required:true, bcrypt: true},
+    username: {
+        type: String,
+        required:true,
+        unique:true
+    },
+    password: {
+        type: String,
+        required:true,
+        set: p => bcrypt.hashSync(p)
+    },
     raw_password: {type: String}, //dev only
     email:{
         type:String,
@@ -44,6 +52,8 @@ UserSchema.pre('save', function(next){
     next();
 });
 
-UserSchema.plugin(mb, {rounds: 10});
+UserSchema.methods.verifyPassword = function(pass){
+    return bcrypt.compare(pass,this.password)
+}
 
 export const User = mongoose.model("User", UserSchema);

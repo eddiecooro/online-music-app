@@ -17,6 +17,14 @@ export const resolvers = {
             }).catch((err)=>{
                 console.log(err);
             });
+        },
+        viewer: (source,args,context)=>{
+            if(context.user){
+                context.user.__modelName = "User";
+                return context.user;
+            } else {
+                return null
+            }
         }
     },
     Node: {
@@ -29,7 +37,7 @@ export const resolvers = {
             return db.dbIdToNodeId(source.__modelName, source._id);
         },
         playlists: (source, args, context)=>{
-             return db.getData("Playlist",source.playlists).then((data) => {
+            return db.getData("Playlist",source.playlists).then((data) => {
                 return data
             }).catch((err) =>{
                 console.log(err)
