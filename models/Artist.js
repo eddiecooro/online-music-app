@@ -7,10 +7,10 @@ var ArtistSchema = new mongoose.Schema({
     SingerType:String,
     description: String,
     rels: [{ rel:String, rel_id:Number }],
-    albums: [{
-        rel: String,
-        album: String
-    }],
+    // albums: [{
+    //     rel: String,
+    //     album: String
+    // }],
     songs: [{
         rel: String, // For example: Singer | Writter | Composer ...        
         song: String //SongId

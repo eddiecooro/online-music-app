@@ -20,7 +20,7 @@ const makeSureIsArray = (e) => {
 
 // Gets a modelName and array of ids and return a promise(because this is an async function)
 // That resolves by an array of jsons from the model specified by modelName
-export const getData = async (modelName,ids ) => {
+export const getData = async (modelName,ids,condetion = {'_id': {$in: ids}},selector = {} ) => {
     ids = makeSureIsArray(ids);
     if(typeof ids[0] !== "object"){
     ids = ids.map((id)=>{
@@ -32,13 +32,14 @@ export const getData = async (modelName,ids ) => {
             return mongoose.Types.ObjectId(id._id)
         })
     }
-    let elements = await models[modelName].find({'_id': {$in: ids}});
+    let elements = await models[modelName].find(condetion,selector);
     makeSureIsArray(elements)
     elements = elements.map((e)=>{
         e = e.toObject();
         e.__modelName = modelName;
         return e;
     });
+    // return elements
     return elements.length == 1 ? elements[0] : elements;
 };
 
