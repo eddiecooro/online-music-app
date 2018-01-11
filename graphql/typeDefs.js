@@ -2,6 +2,7 @@ export const typeDefs = `
     type Query {
         node(id:ID!): Node
         search(text: String!): [Node]
+        viewer: User
     }
 
     interface Node{

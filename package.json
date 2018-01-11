@@ -18,9 +18,12 @@
     "graphql-tools": "^2.18.0",
     "helmet": "^3.9.0",
     "jade": "~1.11.0",
+    "jwt-simple": "^0.5.1",
     "mongoose": "^5.0.0-rc2",
     "mongoose-bcrypt": "^1.5.0",
     "morgan": "~1.9.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
