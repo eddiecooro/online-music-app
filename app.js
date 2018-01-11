@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const passport = require
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+const ExtractJwt = passportJWT.ExtractJwt;
+const Strategy = passportJWT.Strategy;
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -8,13 +11,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const graphql = require('graphql');
 const graphqlHttp = require('express-graphql');
-const auth = require('./auth')();
-const jwt = require('jwt-simple');
 // adding helmet secury middleware
 const helmet = require('helmet');
 
 import graphqlSchema from './graphql';
-import { User,Album } from './models';
+import { login, graphqlAuthenticate } from './auth';
+import { User } from './models';
 import { jwtOptions } from './config';
 
 mongoose.connect('mongodb://localhost/onlineMusicApp').then(() =>{
@@ -25,6 +27,22 @@ mongoose.Promise = global.Promise;
 
 
 var app = express();
+
+// setting authenticate strategy
+const params = {
+  secretOrKey: jwtOptions.jwtSecret,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+};
+let strategy = new Strategy(params, async (payload,done)=>{
+  User.findById(payload.id).then((user)=>{
+      if(user){
+          return done(null, user); 
+      } else {
+          return done(new Error("User not found"),null);
+      }
+  });
+});
+passport.use(strategy);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,25 +56,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(auth.initialize());
+app.use(passport.initialize());
 
-app.use('/secret',(req,res)=>{
-  res.send('Secret Path');
-})
-app.use('/login',(req,res)=>{
-  if(req.body.username && req.body.password){
-    let username = req.body.username;
-    let password = req.body.password;
-    Album.create({
-      name:"Hogtw",
-    }).then((album)=>{
-      console.log(album);
-    })
-  } else {
-  res.send("no username | password")    
+app.use('/login',login)
+
+app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
+    let context = {};
+    if(req.user) context.user = req.user;
+    return graphqlHttp({ 
+      schema: graphqlSchema,
+      context:context,
+      graphiql:true,
+      pretty:true
+     })(req,res,next)
   }
-})
-app.use('/graphql', graphqlHttp({ schema: graphqlSchema, graphiql:true,pretty:true }) );
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
