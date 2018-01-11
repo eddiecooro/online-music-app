@@ -27,6 +27,9 @@ module.exports.createBase = ()=>{
 
         let newArtist = new Artist({
             name: chance.first(),
+            avatar: chance.avatar({protocol:'https',fileExtension:'jpg'}),
+            age: chance.age(),
+            SingerType: chance.word(),
             description: chance.paragraph(),
         });
         saves.push(newArtist.save().then(()=>{
@@ -133,7 +136,29 @@ module.exports.makeRelations = async function(){
             console.log("Artist Song Update Failed");
         });
     }
+    // // Adding album-artist Rels
+    let possibleAlbumRels = ['Singer','Producer','Writter','Composer'];
+    for(let i = 0;i < artistCount;i++){
+        let albums = [];
+        for(let j = 0;j < chance.integer({min:0,max:100});j++){
+            let random = chance.integer({min:0,max:albumCount-1});
+            let album = await Song.findOne().skip(random);
+            let albumId = album._id;
+            albums[j] = {
+                rel: possibleAlbumRels[chance.integer({min:0,max:possibleAlbumRels.length-1})],
+                album: albumId
+            }
+        }
 
+        let currentArtist = await Artist.find().limit(-1).skip(i);
+        currentArtist = currentArtist[0];
+        currentArtist.albums = albums;
+        Artist.update({_id:currentArtist._id},currentArtist).then((w)=>{
+            console.log("Artist Album Added");
+        }).catch((err)=>{
+            console.log("Artist Album Update Failed");
+        });
+    }
     // Adding songs to playlists
     for(let i = 0;i < playlistCount;i++){
         let tracks = [];
@@ -174,6 +199,7 @@ module.exports.makeRelations = async function(){
         }
 
         let songRels = [];
+
         for(let j = 0;j < chance.integer({min:0,max:100});j++){
             let random = chance.integer({min:0,max:songCount-1});
             let song = await Song.findOne().skip(random);

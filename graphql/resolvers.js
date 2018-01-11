@@ -46,10 +46,17 @@ export const resolvers = {
             let songrels = source.songsRels;
             let listeneds = songrels.filter((srel)=>{
                 return srel.rel === "listened";
+<<<<<<< HEAD
             });
             let listenedIds = listeneds.map((listened)=>{
                 return listened.songId;
             });
+=======
+            });
+            let listenedIds = listeneds.map((listened)=>{
+                return listened.songId;
+            });
+>>>>>>> refs/remotes/origin/bug-fix
             return db.getData("Song",listenedIds).then((data)=>{
                 return data
             }).catch((err)=>{
@@ -102,10 +109,7 @@ export const resolvers = {
                 console.log(err)
             });
         },
-        releaseDate:(source,args,context) =>{
-            console.log(source)
-            // return source.releaseDate.toString();
-        }
+        
     },
     Artist: {
         id: (source, args, context)=>{
@@ -115,8 +119,12 @@ export const resolvers = {
             var albumId = source.albums.map((albumRel) =>{
                 return albumRel.album
             })
-            
-            return db.getData("Album",albumId)
+            console.log(albumId)
+            return db.getData("Album",albumId).then((data)=> {
+                return data
+            }).catch((err) => {
+                console.log(err)
+            });
         },
         songs: (source, args, context)=>{
             let songIds = source.songs.map((songRel)=>{
