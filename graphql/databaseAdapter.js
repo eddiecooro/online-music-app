@@ -1,4 +1,3 @@
-import Fuse from 'fuse.js';
 import mongoose from 'mongoose';
 import * as models from '../models';
 
