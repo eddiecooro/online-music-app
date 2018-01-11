@@ -49,7 +49,7 @@ export const typeDefs = `
         cover: String
         album: Album
         tags: [String]
-        Artists: [Artist]
+        artists: [Artist]
     }
 
     type Artist implements Node {
