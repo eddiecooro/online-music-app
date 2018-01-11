@@ -1,6 +1,4 @@
 import * as db from './databaseAdapter';
-import { Artist } from '../models/index';
-import { dbIdToNodeId } from './databaseAdapter';
 
 export const resolvers = {
     Query: {
@@ -101,7 +99,7 @@ export const resolvers = {
                 console.log(err);
             });
         },
-        artist: async (source,args,context) =>{
+        artists: async (source,args,context) =>{
              var songId = []
              var ArtistList = []
             await db.getData("Song",source._id,{"albumId" : source._id},{"_id" : 1}).then((data) =>{
@@ -138,15 +136,12 @@ export const resolvers = {
         },
         album: (source, args, context)=>{
             return db.getData("Album",source.albumId).then((data)=>{
-                if(!Array.isArray(data)){
-                    data = [data]
-                }
-                return data
+                return data 
             }).catch((err)=>{
                 console.log(err)
             });
         },
-        Artists: (source,args,context) => {
+        artists: (source,args,context) => {
             
             return db.getData("Artist",source._id,{ 'songs' : {$elemMatch : { 'song' : {$in : source._id} }}}).then((data) => {
             if(!Array.isArray(data)){
@@ -173,9 +168,9 @@ export const resolvers = {
                     data = [data]
                 }
                 albumIds = data.slice()
-                 return data
+                return data
              }).catch((err) => {
-                 console.log(err)
+                console.log(err)
              });
              albumIds = albumIds.map((e) =>{
                  return e.albumId

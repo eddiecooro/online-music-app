@@ -38,7 +38,7 @@ export const typeDefs = `
         cover: String
         releaseDate: String
         songs: [Song]
-        artist: [Artist]
+        artists: [Artist]
     }
 
     type Song implements Node {
@@ -52,7 +52,7 @@ export const typeDefs = `
         cover: String
         album: Album
         tags: [String]
-        Artists: [Artist]
+        artists: [Artist]
     }
 
     type Artist implements Node {

@@ -23,9 +23,9 @@ const makeSureIsArray = (e) => {
 export const getData = async (modelName,ids,condetion = {'_id': {$in: ids}},selector = {} ) => {
     ids = makeSureIsArray(ids);
     if(typeof ids[0] !== "object"){
-    ids = ids.map((id)=>{
-        return mongoose.Types.ObjectId(id);
-    });
+        ids = ids.map((id)=>{
+            return mongoose.Types.ObjectId(id);
+        });
     }
     else{
         ids = ids.map((id) =>{
