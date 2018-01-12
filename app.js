@@ -15,7 +15,6 @@ const graphqlHttp = require('express-graphql');
 const helmet = require('helmet');
 
 import graphqlSchema from './graphql';
-import * as databaseAdapter from './models/databaseAdapter';
 import { login, graphqlAuthenticate } from './auth';
 import { User } from './models';
 import { jwtOptions } from './config';
@@ -61,10 +60,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/login',login)
-
+const db = require('./models/databaseAdapter')
 app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
     let context = {
-      db: databaseAdapter
+      db: db
     };
     if(req.user) context.user = req.user;
     return graphqlHttp({ 

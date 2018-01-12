@@ -8,6 +8,9 @@ function validateEmail(email) {
  }
 
 var UserSchema = new Schema({
+    //Comment Just For Dev
+    //It Works
+    
     emailValidated: {type:Boolean,default:false},
     validateUrl: {type:String},    
     username: {
@@ -20,6 +23,12 @@ var UserSchema = new Schema({
         required:true,
         set: p => bcrypt.hashSync(p,8)
     },
+
+    // password: {
+    //     type: String,
+    //     required:true,
+    //     set: p => bcrypt.hashSync(p)
+    // },
     raw_password: {type: String}, //dev only
     email:{
         type:String,

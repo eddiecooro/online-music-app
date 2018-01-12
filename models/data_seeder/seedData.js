@@ -7,7 +7,7 @@ module.exports.createBase = ()=>{
     console.log("Filing Collections");
     let saves = [];
     for(let i = 0;i < 100;i++){
-        let password = chance.word();
+        let password = chance.word().toString();
         let newUser = new User({
             emailValidated: chance.bool(),
             username: chance.word(),
@@ -19,6 +19,7 @@ module.exports.createBase = ()=>{
             gender: chance.gender(),
             age: chance.age(),
         });
+        
         saves.push(newUser.save().then((usr)=>{
             console.log("User saved")
         }).catch((err)=>{
@@ -204,10 +205,10 @@ module.exports.makeRelations = async function(){
         for(let j = 0;j < chance.integer({min:0,max:100});j++){
             let random = chance.integer({min:0,max:songCount-1});
             let song = await Song.findOne().skip(random);
-            let songId = song._id;
+            let songsId = song._id;
             songRels[j] = {
                 rel: possibleUserSongRels[chance.integer({min:0,max:possibleUserSongRels.length-1})],
-                song: songId
+                songId: songsId
             }
         }
 
