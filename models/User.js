@@ -18,7 +18,7 @@ var UserSchema = new Schema({
     password: {
         type: String,
         required:true,
-        set: p => bcrypt.hashSync(p)
+        set: p => bcrypt.hashSync(p,8)
     },
     raw_password: {type: String}, //dev only
     email:{

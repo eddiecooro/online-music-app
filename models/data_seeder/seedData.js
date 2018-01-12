@@ -10,7 +10,7 @@ module.exports.createBase = ()=>{
         let password = chance.word();
         let newUser = new User({
             emailValidated: chance.bool(),
-            username: chance.first(),
+            username: chance.word(),
             password: password,
             raw_password: password,
             email: chance.email(),
@@ -22,6 +22,7 @@ module.exports.createBase = ()=>{
         saves.push(newUser.save().then((usr)=>{
             console.log("User saved")
         }).catch((err)=>{
+            // console.log(err)
             console.log("User save failed")
         }));
 
@@ -33,7 +34,7 @@ module.exports.createBase = ()=>{
             description: chance.paragraph(),
         });
         saves.push(newArtist.save().then(()=>{
-            // console.log("Artist saved")
+            console.log("Artist saved")
         }).catch(()=>{
             console.log("Artist save failed")
         }));
@@ -55,7 +56,7 @@ module.exports.createBase = ()=>{
             cover: chance.avatar({protocol:'https',fileExtension:'jpg'}),
         });
         saves.push(newSong.save().then(()=>{
-            // console.log("Song saved")
+            console.log("Song saved")
         }).catch(()=>{
             console.log("Song save failed")
         }));
@@ -69,7 +70,7 @@ module.exports.createBase = ()=>{
             expireDate: expireDate
         });
         saves.push(newPlaylist.save().then(()=>{
-            // console.log("Playlist saved")
+            console.log("Playlist saved")
         }).catch(()=>{
             console.log("Playlist save failed")
         }));
@@ -80,7 +81,7 @@ module.exports.createBase = ()=>{
             releaseDate: chance.date()
         });
         saves.push(newAlbum.save().then(()=>{
-            // console.log("Album saved")
+            console.log("Album saved")
         }).catch(()=>{
             console.log("Album save failed")
         }));
@@ -88,7 +89,7 @@ module.exports.createBase = ()=>{
     return saves;
 };
 
-module.exports.makeRelation = async function(){
+module.exports.makeRelations = async function(){
     console.log("Making Relations");
     let userCount = await User.count();
     let songCount = await Song.count();
