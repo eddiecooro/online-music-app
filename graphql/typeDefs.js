@@ -9,6 +9,24 @@ export const typeDefs = `
         id: ID!
     }
 
+    type UserSongEdge{
+        node: Song
+        cursor: String
+
+    }
+    type PageInfo{
+        startCursor : String
+        endCursor: String
+        hasNextPage : Boolean
+        hasPreviousPage: Boolean
+    }
+    type UserSongConnection{
+        edges: [UserSongEdge]
+        pageInfo: PageInfo
+    }
+    
+
+
     type User implements Node {
         id: ID!
         emailValidated: Boolean
@@ -18,12 +36,13 @@ export const typeDefs = `
         avatar: String
         age: Int
         playlists: [Playlist]
+        getSongs(first: Int,last: Int): UserSongConnection
         followedArtists: [Artist]
         listenedSongs: [Song]
         likedSongs: [Song]
         hatedSongs: [Song]
     }
-
+    
     type Playlist implements Node {
         id: ID!
         name: String
@@ -40,7 +59,7 @@ export const typeDefs = `
         cover: String
         releaseDate: String
         songs: [Song]
-        artists: [Artist]
+        artist: [Artist]
     }
 
     type Song implements Node {

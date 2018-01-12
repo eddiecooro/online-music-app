@@ -60,9 +60,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/login',login)
-
+const db = require('./models/databaseAdapter')
 app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
-    let context = {};
+    let context = {
+      db: db
+    };
     if(req.user) context.user = req.user;
     return graphqlHttp({ 
       schema: graphqlSchema,
