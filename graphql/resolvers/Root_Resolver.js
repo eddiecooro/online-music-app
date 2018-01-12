@@ -25,7 +25,7 @@ module.exports = {
             } else {
                 return null
             }
-        }
+        },
     },
     //Specify Which Resolve Should Go
     Node: {
@@ -39,53 +39,53 @@ module.exports = {
 
        
 
-    Artist: {
-        id: (source, args, context)=>{
-            return context.dbIdToNodeId(source.__modelName, source._id);
-        },
-        albums: async (source,args,context) =>{
-             var albumIds = [];
-             var songId = source.songs.map((s) =>{
-                 return s.song
-             });
+    // Artist: {
+    //     id: (source, args, context)=>{
+    //         return context.dbIdToNodeId(source.__modelName, source._id);
+    //     },
+    //     albums: async (source,args,context) =>{
+    //          var albumIds = [];
+    //          var songId = source.songs.map((s) =>{
+    //              return s.song
+    //          });
              
-             await context.getData("Song",songId,{'_id' : {$in : songId}},{'albumId':1}).then((data) => {
-                if(!Array.isArray(data)){
-                    data = [data]
-                }
-                albumIds = data.slice()
-                 return data
-             }).catch((err) => {
-                 console.log(err)
-             });
-             albumIds = albumIds.map((e) =>{
-                 return e.albumId
-             })
-             albumIds = albumIds.filter((e,p) =>{
-                    return albumIds.indexOf(e) == p;
-             })
-            return context.getData("Album",albumIds).then((data)=>{
-                if(!Array.isArray(data)){
-                    data = [data]
-                }
-                return data
-            }).catch((err) => {
-                console.log(err)
-            })
-        },
-        songs: (source, args, context)=>{
-            let songIds = source.songs.map((songRel)=>{
-                return songRel.song;
-            });
-            return context.getData("Song",songIds).then((data)=>{
-                if(!Array.isArray(data)){
-                    data = [data]
-                }
-                return data
-            }).catch((err)=>{
-                console.log(err)
-            });
-        },
-    }
+    //          await context.getData("Song",songId,{'_id' : {$in : songId}},{'albumId':1}).then((data) => {
+    //             if(!Array.isArray(data)){
+    //                 data = [data]
+    //             }
+    //             albumIds = data.slice()
+    //              return data
+    //          }).catch((err) => {
+    //              console.log(err)
+    //          });
+    //          albumIds = albumIds.map((e) =>{
+    //              return e.albumId
+    //          })
+    //          albumIds = albumIds.filter((e,p) =>{
+    //                 return albumIds.indexOf(e) == p;
+    //          })
+    //         return context.getData("Album",albumIds).then((data)=>{
+    //             if(!Array.isArray(data)){
+    //                 data = [data]
+    //             }
+    //             return data
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    //     },
+    //     songs: (source, args, context)=>{
+    //         let songIds = source.songs.map((songRel)=>{
+    //             return songRel.song;
+    //         });
+    //         return context.getData("Song",songIds).then((data)=>{
+    //             if(!Array.isArray(data)){
+    //                 data = [data]
+    //             }
+    //             return data
+    //         }).catch((err)=>{
+    //             console.log(err)
+    //         });
+    //     },
+    // }
     
 }

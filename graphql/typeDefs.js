@@ -5,8 +5,17 @@ export const typeDefs = `
         viewer: User
     }
 
+    type Mutation {
+        createUser(user:UserInput): User
+    }
+
     interface Node{
         id: ID!
+    }
+
+    enum gender{
+        MALE
+        FEMALE
     }
 
     type User implements Node {
@@ -67,6 +76,23 @@ export const typeDefs = `
         SingerType: String
         albums: [Album]
         songs: [Song]
+    }
+
+    type UserMutation{
+        add(user: UserInput!): User
+        update(id:ID!,user:UserInput): User
+        delete(id:ID!): User
+        like(songId:ID!): Song
+    }
+
+    input UserInput {
+        username: String
+        email: String
+        password: String
+        nickname: String
+        avatar: String
+        gender: gender
+        age: Int
     }
 
 `
