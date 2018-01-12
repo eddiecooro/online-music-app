@@ -6,7 +6,8 @@ export const typeDefs = `
     }
 
     type Mutation {
-        createUser(user:UserInput): User
+        createUser(user:UserInput!): User
+        updateUser(id:ID!,user:UserInput!): User
     }
 
     interface Node{
