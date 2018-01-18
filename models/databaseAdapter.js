@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import * as models from '../models';
-
+var cursorFunc = require('./')
 export const dbIdToNodeId = (tableName, dbId) => {
     return `${tableName}:${dbId}`;
 };
@@ -207,86 +207,180 @@ export const search = async (modelNames, text) => {
     })
 }
 
-export const Get_Limited_After_Data = (modelName, first, last, after) => {
-
-    const filter = {
-        _id: {},
-    };
-
-    if (after) {
-        const op = '$gt';
-        filter._id[op] = ObjectId(after.value);
-    }
-
-    return models[modelName].find(filter);
-
+export function CursorToId(input) {
+    return new Buffer(input, 'base64').toString("binary")
+}
+export function IdToCursor(input) {
+    return new Buffer(input, 'binary').toString("base64")
 }
 
-export const Paginetion = async (sourceModelName, targetModelName, id, first, last) => {
-    var ids = await models[sourceModelName].find({ '_id': id }, { songsRels: 1 }).then((data) => {
-        return data
-    }).catch((err) => {
-        console.log(err)
-    })
-    ids = ids[0].songsRels.map((e) => {
-        return mongoose.Types.ObjectId(e.songId)
-    })
-    var elements = []
-    let count = 0;
-    let skip = 0;
-    let limit = 0;
+export const Paginetion = async (sourceModelName, targetModelName, id, args) => {
 
-    if (first || last) {
-        elements = await models[targetModelName].find({ '_id': { $in: ids } })
-        count = elements.length
-        limit = count
 
-        if (first && count > first) {
-            limit = first
-        }
 
-        if (last) {
-            if (limit && limit > last) {
-                skip = limit - last;
-                limit -= skip;
+    // let cursors = ids[0].songsRels.forEach((e) => {
+    //     return IdToCursor(mongoose.Types.ObjectId(e._Id).toString())
+    // })
+
+    // let songIds = ids[0].songsRels.map((e) => {
+    //     return mongoose.Types.ObjectId(e.songId)
+    // })
+    let hasNextPage = false;
+    let hasPreviousPage = false;
+
+    var ids = await models[sourceModelName].find({ '_id': id }, { songsRels: 1 })
+    ids = ids[0].songsRels
+
+    if (args.before || args.after) {
+        for (let i = 0; i < ids.length; i++) {
+
+
+            if (args.after && args.after == ids[i]._id) {
+                ids = ids.slice(i + 1)
             }
-            else if (!limit && count > last) {
-                skip = count - last
+            if (args.before && args.before == ids[i]._id) {
+                ids = ids.slice(0, i)
+                break
             }
         }
-
     }
 
-    await Data_Paigention_Findig(limit, skip, targetModelName, ids).then((data) => {
+    // eval(require('locus'))
+    console.log(ids+"\n\n\n\n\n\n")
+    if (args.first || args.last) {
+        if (args.first && args.first < ids.length) {
+            hasNextPage = true
+            ids = ids.slice(0, args.first)
+        }
+        if (args.last && args.last < ids.length) {
+            hasPreviousPage = true
+            ids = ids.slice(ids.length - args.last)
+        }
+    }
+    console.log(ids+"\n\n\n\n\n\n")
 
-        elements = data.slice()
-
-        return data
+    let songIds = ids.map((e) => {
+        return mongoose.Types.ObjectId(e.songId)
     })
-    elements = elements.map((e) => {
+
+
+
+    var elements = await models[targetModelName].find({ '_id': { $in: songIds } })
+    console.log(elements.map((e)=>{return e._id})+"\n\n\n\n\n\n")
+    
+    let counter = 0
+    for (var i = 0; i < songIds.length; i++) {
+        if (elements[i]._id.toString() == songIds[0]) {
+
+            let temp = elements[counter];
+            elements[counter] = elements[i];
+            elements[i] = temp;
+            songIds.splice(0, 1)
+            counter++;
+                        
+        }
+    }
+    console.log(elements.map((e)=>{
+        return e._id
+    }))
+    
+    // var elements = []
+    // let count = 0;
+    // let skip = 0;
+    // let limit = 0;
+    // let first = args.first
+    // let last = args.last
+    // let before;
+    // let after;
+    // if (args.before) {
+    //     before = mongoose.Types.ObjectId(args.before)
+    // }
+    // if (args.after) {
+    //     after = mongoose.Types.ObjectId(args.after)
+    // }
+
+    // if (first || last) {
+    //     count = await models[targetModelName].find({ '_id': { $in: songIds } }).count()
+    //     limit = count
+
+    //     if (first && count > first) {
+    //         limit = first
+    //     }
+
+    //     if (last) {
+    //         if (limit && limit > last) {
+    //             skip = limit - last;
+    //             limit -= skip;
+    //         }
+    //         else if (!limit && count > last) {
+    //             skip = count - last
+    //         }
+    //     }
+    // }
+    // elements = await getData_Limitation(before, after, limit, skip, targetModelName, songIds).slice()
+    elements = elements.map((e, i) => {
         e = e.toObject();
         e.__modelName = targetModelName;
+        e.__cursor = IdToCursor(ids[i]._id.toString());
         return e;
     });
     return {
         result: elements.length == 1 ? elements[0] : elements,
-        hasNextPage: (first && count > first),
-        hasPreviousPage: (last && count > last)
-
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage
     }
 
 }
 
+// function getData_Limitation(before, after, limit, skip, targetModelName, ids) {
+//     if (before) {
+//         if (after) {
+//             if (limit != 0) {
+//                 return models[targetModelName].find({ '_id': { $gt: after, $lt: before, $in: ids } }).skip(skip).limit(limit).then((data) => {
+//                     return data
+//                 })
+//             } else {
+//                 return models[targetModelName].find({ '_id': { $gt: after, $lt: before, $in: ids } }).skip(skip).then((data) => {
+//                     return data
+//                 })
+//             }
+//         }
+//         else {
+//             if (limit != 0) {
+//                 return models[targetModelName].find({ '_id': { $lt: before, $in: ids } }).skip(skip).limit(limit).then((data) => {
+//                     return data
+//                 })
+//             } else {
+//                 return models[targetModelName].find({ '_id': { $lt: before, $in: ids } }).skip(skip).then((data) => {
+//                     return data
+//                 })
+//             }
+//         }
+//     }
+//     else {
+//         if (after) {
+//             if (limit != 0) {
+//                 return models[targetModelName].find({ '_id': { $gt: after, $in: ids } }).skip(skip).limit(limit).then((data) => {
+//                     return data
+//                 })
+//             } else {
 
-function Data_Paigention_Findig(limit, skip, targetModelName, ids) {
-    if (limit != 0) {
-        return models[targetModelName].find({ '_id': { $in: ids } }).skip(skip).limit(limit).then((data) => {
-            return data
-        })
-    }
-    else {
-        return models[targetModelName].find({ '_id': { $in: ids } }).then((data) => {
-            return data
-        })
-    }
-}
+//                 return models[targetModelName].find({ '_id': { $gt: after, $in: ids } }).skip(skip).then((data) => {
+//                     return data
+//                 })
+//             }
+//         }
+//         else {
+//             if (limit != 0) {
+//                 return models[targetModelName].find({ '_id': { $in: ids } }).skip(skip).limit(limit).then((data) => {
+//                     return data
+//                 })
+//             } else {
+//                 return models[targetModelName].find({ '_id': { $in: ids } }).skip(skip).then((data) => {
+//                     return data
+//                 })
+//             }
+//         }
+//     }
+// }
+

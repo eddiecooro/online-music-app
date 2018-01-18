@@ -36,7 +36,7 @@ export const typeDefs = `
         avatar: String
         age: Int
         playlists: [Playlist]
-        getSongs(first: Int,last: Int): UserSongConnection
+        getSongs(first: Int,last: Int,before: String, after: String ): UserSongConnection
         followedArtists: [Artist]
         listenedSongs: [Song]
         likedSongs: [Song]

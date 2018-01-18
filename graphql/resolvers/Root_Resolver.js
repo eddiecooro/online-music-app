@@ -1,4 +1,3 @@
-const helper = require('./ResolverHelper');
 module.exports = {
     //Root Query
     Query: {
@@ -27,34 +26,6 @@ module.exports = {
             return source.__modelName;
         }
     },
-    UserSongEdge: {
-        node: (source, args, context) => {
-            return source
-        },
-        cursor: (source,args,context) => {
-            // console.log(source.id.toString())
-            return helper.IdToCursor(source._id.toString())
-        }
-    },
-    PageInfo: {
-        hasNextPage: (source,args,context)=>{
-            return source.NextPage
-        },
-        hasPreviousPage: (source,args,context)=>{
-            return source.PreviousPage
-        }
-    },
-    UserSongConnection: {
-        edges: (source, args, context) => {
-            return source.result
-           
-        },
-        pageInfo: (source,args,context) =>{
-            console.log(source)
-            return {NextPage:source.hasNextPage,
-            PreviousPage: source.hasPreviousPage
-            }
-        }
-    }
+   
 
 }

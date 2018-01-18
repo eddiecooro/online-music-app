@@ -11,7 +11,7 @@ module.exports.createBase = ()=>{
         let newUser = new User({
             emailValidated: chance.bool(),
             username: chance.first(),
-            // password: password,
+            password: password,
             raw_password: password,
             email: chance.email(),
             avatar: chance.avatar({protocol:'https',fileExtension:'jpg'}),
@@ -34,7 +34,7 @@ module.exports.createBase = ()=>{
             description: chance.paragraph(),
         });
         saves.push(newArtist.save().then(()=>{
-            // console.log("Artist saved")
+            console.log("Artist saved")
         }).catch(()=>{
             console.log("Artist save failed")
         }));
@@ -48,7 +48,7 @@ module.exports.createBase = ()=>{
             }
         }
         var newSong = new Song({
-            name: chance.first(),
+            name: chance.word(),
             description: chance.paragraph(),
             genre: genre,
             lyrics: [chance.paragraph()],
@@ -56,7 +56,7 @@ module.exports.createBase = ()=>{
             cover: chance.avatar({protocol:'https',fileExtension:'jpg'}),
         });
         saves.push(newSong.save().then(()=>{
-            // console.log("Song saved")
+            console.log("Song saved")
         }).catch(()=>{
             console.log("Song save failed")
         }));
@@ -70,7 +70,7 @@ module.exports.createBase = ()=>{
             expireDate: expireDate
         });
         saves.push(newPlaylist.save().then(()=>{
-            // console.log("Playlist saved")
+            console.log("Playlist saved")
         }).catch(()=>{
             console.log("Playlist save failed")
         }));
@@ -81,7 +81,7 @@ module.exports.createBase = ()=>{
             releaseDate: chance.date()
         });
         saves.push(newAlbum.save().then(()=>{
-            // console.log("Album saved")
+            console.log("Album saved")
         }).catch(()=>{
             console.log("Album save failed")
         }));

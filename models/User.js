@@ -16,14 +16,14 @@ var UserSchema = new Schema({
     username: {
         type: String,
         required:true,
-        // unique:true
+        unique:true
     },
 
-    // password: {
-    //     type: String,
-    //     required:true,
-    //     set: p => bcrypt.hashSync(p)
-    // },
+    password: {
+        type: String,
+        required:true,
+        set: p => bcrypt.hashSync(p,10)
+    },
     raw_password: {type: String}, //dev only
     email:{
         type:String,

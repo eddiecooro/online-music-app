@@ -1,5 +1,4 @@
-var {convertCursorToNodeId,nodeIdToConvertCursor} = require('./ResolverHelper')
-module.exports  = {
+module.exports = {
     User: {
         //get Id From Node Id
         id: (source, args, context) => {
@@ -12,69 +11,70 @@ module.exports  = {
                 console.log(err)
             });
         },
-        getSongs: async (source,args,context) =>{
-            let first = args.first
-            let last = args.last
-            return context.db.Paginetion("User","Song",source._id,args.first,args.last).then((data)=>{
-                return data
-            })
-            
+        getSongs: async (source, args, context) => {
+            if (args.before) {
+                args.before = context.db.CursorToId(args.before);
+            }
+            if (args.after) {
+                args.after = context.db.CursorToId(args.after);
+                }
+                return context.db.Paginetion("User", "Song", source._id, args).then((data) => {
+                    return data
+                })
+            },
 
+            followedArtists: (source, args, context) => {
+                return context.db.getData_Id("Artist", source.followedArtists).then((data) => {
+                    return data
+                }).catch((err) => {
+                    console.log(err)
+                });
+            },
+                listenedSongs: (source, args, context) => {
+                    //songRel like => {rel:"liked",songId:"jlk23132980dd"}
+                    let songrels = source.songsRels;
+                    let listeneds = songrels.filter((e) => {
+                        return e.rel === "listened";
+                    });
+                    let listenedIds = listeneds.map((e) => {
+                        return e.songId;
+                    });
+                    return context.db.getData_Id("Song", listenedIds).then((data) => {
+                        return data
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+                },
+                    likedSongs: (source, args, context) => {
+                        //songRel like => {rel:"liked",songId:"jlk23132980dd"}
+                        let songrels = source.songsRels;
+                        let likeds = songrels.filter((srel) => {
+                            return srel.rel === "liked";
+                        });
+                        let likedIds = likeds.map((liked) => {
+                            return liked.songId;
+                        });
+                        return context.db.getData_Id("Song", likedIds).then((data) => {
+                            return data
+                        }).catch((err) => {
+                            console.log(err)
+                        });
 
-        },
-       
-        followedArtists: (source, args, context) => {
-            return context.db.getData_Id("Artist", source.followedArtists).then((data) => {
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
-        },
-        listenedSongs: (source, args, context) => {
-            //songRel like => {rel:"liked",songId:"jlk23132980dd"}
-            let songrels = source.songsRels;
-            let listeneds = songrels.filter((e) => {
-                return e.rel === "listened";
-            });
-            let listenedIds = listeneds.map((e) => {
-                return e.songId;
-            });
-            return context.db.getData_Id("Song", listenedIds).then((data) => {
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
-        },
-        likedSongs: (source, args, context) => {
-            //songRel like => {rel:"liked",songId:"jlk23132980dd"}
-            let songrels = source.songsRels;
-            let likeds = songrels.filter((srel) => {
-                return srel.rel === "liked";
-            });
-            let likedIds = likeds.map((liked) => {
-                return liked.songId;
-            });
-            return context.db.getData_Id("Song", likedIds).then((data) => {
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
-
-        },
-        hatedSongs:(source,args,context) =>{
-            //songRel like => {rel:"liked",songId:"jlk23132980dd"}
-            let songrels = source.songsRels;
-            let likeds = songrels.filter((srel) => {
-                return srel.rel === "hated";
-            });
-            let likedIds = likeds.map((liked) => {
-                return liked.songId;
-            });
-            return context.db.getData_Id("Song", likedIds).then((data) => {
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
+                    },
+                        hatedSongs: (source, args, context) => {
+                            //songRel like => {rel:"liked",songId:"jlk23132980dd"}
+                            let songrels = source.songsRels;
+                            let likeds = songrels.filter((srel) => {
+                                return srel.rel === "hated";
+                            });
+                            let likedIds = likeds.map((liked) => {
+                                return liked.songId;
+                            });
+                            return context.db.getData_Id("Song", likedIds).then((data) => {
+                                return data
+                            }).catch((err) => {
+                                console.log(err)
+                            });
+                        }
         }
     }
-}
