@@ -5,7 +5,7 @@
   "scripts": {
     "init": "npm i && cd client && npm i",
     "seed": "node models/data_seeder/runSeed",
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
