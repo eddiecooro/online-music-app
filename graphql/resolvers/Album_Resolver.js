@@ -1,11 +1,11 @@
 module.exports = {
     Album: {
         id: (source, args, context) => {
-            return context.dbIdToNodeId(source.__modelName, source._id);
+            return context.db.dbIdToNodeId(source.__modelName, source._id);
         },
 
         songs: (source, args, context) => {
-            return context.getSong_AlbumId("Song", source._id).then((data) => {
+            return context.db.getSong_AlbumId("Song", source._id).then((data) => {
                 if (!Array.isArray(data)) {
                     data = [data];
                 }
@@ -19,7 +19,7 @@ module.exports = {
             var songId = []
             var ArtistList = []
             //Get SongId From AlbumId
-            await context.getSongId_AlbumId("Song", source._id).then((data) => {
+            await context.db.getSongId_AlbumId("Song", source._id).then((data) => {
                 if (!Array.isArray(data)) {
                     data = [data]
                 }
@@ -33,7 +33,7 @@ module.exports = {
             })
 
             //Then getArtistOfAlbums From SongId
-            return context.getArtist_SongId("Artist", songId).then((data) => {
+            return context.db.getArtist_SongId("Artist", songId).then((data) => {
 
                 if (!Array.isArray(data)) {
                     data = [data]
