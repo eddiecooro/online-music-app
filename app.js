@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const ExtractJwt = passportJWT.ExtractJwt;
@@ -16,41 +15,38 @@ const helmet = require('helmet');
 
 import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';
-import { User } from './models';
+// import { User } from './models';
 import { jwtOptions } from './config';
 
-mongoose.connect('mongodb://localhost/onlineMusicApp').then(() =>{
-    console.log("Connected Seccessfuly");
-  }).catch((err) =>{
-    console.log(err);
-});
-mongoose.Promise = global.Promise;
-
+var neo = require('seraph')('http://localhost:7474')    
+if(neo){
+  console.log("Connected Seccessfuly");
+}
 
 var app = express();
 
-// setting authenticate strategy
-const params = {
-  secretOrKey: jwtOptions.jwtSecret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
-};
-let strategy = new Strategy(params, async (payload,done)=>{
-  User.findById(payload.id).then((user)=>{
-      if(user){
-          return done(null, user); 
-      } else {
-          return done(new Error("User not found"),null);
-      }
-  });
-});
-passport.use(strategy);
+// // setting authenticate strategy
+// const params = {
+//   secretOrKey: jwtOptions.jwtSecret,
+//   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+// };
+// let strategy = new Strategy(params, async (payload,done)=>{
+//   User.findById(payload.id).then((user)=>{
+//       if(user){
+//           return done(null, user); 
+//       } else {
+//           return done(new Error("User not found"),null);
+//       }
+//   });
+// });
+// passport.use(strategy);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(helmet());
-// uncomment after placing your favicon in /public
+// Uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -60,15 +56,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/login',login)
-const db = require('./models/databaseAdapter')
+// const db = require('./models/databaseAdapter')
 app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
-    let context = {
-      db: db
-    };
-    if(req.user) context.user = req.user;
+    // let context = {
+    //   db: db
+    // };
+    // if(req.user) context.user = req.user;
     return graphqlHttp({ 
       schema: graphqlSchema,
-      context:context,
+      // context:context,
       graphiql:true,
       pretty:true
      })(req,res,next)

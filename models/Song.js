@@ -1,20 +1,16 @@
-const mongoose = require('mongoose');
+var db = require('../DataBase/DataBaseConnection')
+var SongModel = require('seraph-model')(db,'Song')
 
-var SongSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    genre: [String],
-    lyrics: [String],
-    releaseDate: Date,
-    url: String,
-    cover: String,
-    rels: [{ rel:String, rel_id:Number }],
-    albumId: { type: String },
-    tags:[String]
-},{
-    timestamps: true
-});
+SongModel.schema ={
+    name: {type:String,require:true},
+    description: {type:String},
+    genre: {type:Array},
+    lyrics: {type:Array},
+    releaseDate: {type:Date},
+    url: {type:String,require:true},
+    cover: {type:String},
+    tags:{type:Array}
+}
+SongModel.useTimestamps("CreatedAt","UpdatedAdd")
 
-SongSchema.index({name:'text',lyrics:'text'});
-
-export const Song = mongoose.model("Song",SongSchema);
+// export const Song = mongoose.model("Song",SongSchema);
