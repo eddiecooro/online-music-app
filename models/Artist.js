@@ -1,24 +1,12 @@
-const mongoose = require('mongoose');
+var db = require('../DataBase/DataBaseConnection')
+var ArtistModel = require('seraph-model')(db,'Artist')
 
-var ArtistSchema = new mongoose.Schema({
-    name: String,
-    avatar: String,
-    age:Number,
-    SingerType:String,
-    description: String,
-    rels: [{ rel:String, rel_id:Number }],
-    // albums: [{
-    //     rel: String,
-    //     album: String
-    // }],
-    songs: [{
-        rel: String, // For example: Singer | Writter | Composer ...        
-        song: String //SongId
-    }]
-}, {
-    timestamps: true
-});
+ArtistModel.schema = {
+    name: {type:String,required : true},
+    avatar: {type:String},
+    age: {type:Number, min : 1,max: 200},
+    description: {type:String},
+}
+ArtistModel.useTimestamps('CreatedAt','UpdatedAt')
 
-ArtistSchema.index({name:'text'});
-
-export const Artist = mongoose.model('Artist', ArtistSchema);
+module.exports = ArtistModel;

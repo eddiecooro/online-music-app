@@ -2,7 +2,7 @@ var db = require('../DataBase/DataBaseConnection')
 var SongModel = require('seraph-model')(db,'Song')
 
 SongModel.schema ={
-    name: {type:String,require:true},
+    name: {type:String,required:true},
     description: {type:String},
     genre: {type:Array},
     lyrics: {type:Array},
@@ -13,4 +13,4 @@ SongModel.schema ={
 }
 SongModel.useTimestamps("CreatedAt","UpdatedAdd")
 
-// export const Song = mongoose.model("Song",SongSchema);
+module.exports= SongModel

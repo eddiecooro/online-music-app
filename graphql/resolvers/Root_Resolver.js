@@ -10,7 +10,6 @@ module.exports = {
                 console.log(err);
             });
         },
-<<<<<<< HEAD
         search: (source, args, context)=>{
             let modelsToSearch = ["User","Playlist","Song","Artist","Album"];
             return db.search(modelsToSearch,args.text).then((data)=>{
@@ -23,13 +22,6 @@ module.exports = {
             if(context.user){
                 context.user.__modelName = "User";
                 return context.user;
-=======
-
-        viewer: (source, args, context) => {
-            if (context.db.user) {
-                context.db.user.__modelName = "User";
-                return context.db.user;
->>>>>>> Paginetion
             } else {
                 return null
             }

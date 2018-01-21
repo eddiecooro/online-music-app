@@ -1,21 +1,12 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var db = require('../DataBase/DataBaseConnection')
+var PlayListModel = require('seraph-model')(db, 'PlayList')
 
+PlayListModel.schema = {
+    name: { type: String, required: true },
+    cover: { type: String },
+    private: { type: Boolean, default: true },
+    expireDate: { type: Date }
+}
+PlayListModel.useTimestamps('CreatedAt','UpdatedAt')
 
-var PlaylistSchema = new Schema({
-    name:{type:String,require:true},
-    tracks:[String], // song ids
-    cover:String,
-    private: {type:Boolean, default:true},
-    expireDate:Date
-}, {
-    timestamps: true,
-});
-
-PlaylistSchema.index({name:'text'});
-
-PlaylistSchema.virtual('trackCount').get(
-    function(){ return this.tracks.length }
-);
-
-export const Playlist = mongoose.model("Playlist",PlaylistSchema);
+module.exports = PlayListModel
