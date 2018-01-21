@@ -1,8 +1,15 @@
-import { User, Song, Artist, Playlist, Album } from '../index';
-
+import UserModel from "../User"
+var User = UserModel
+import SongModel from "../Song"
+var Song = SongModel
+import PlaylistModel from "../Playlist"
+var Playlist = PlaylistModel
+import ArtistModel from "../Artist"
+var Artist = ArtistModel
+import  AlbumModel  from "../Album"
+var Album = AlbumModel
 const Chance = require('chance');
 const chance = new Chance();
-console.log(User)
 module.exports.createBase = () => {
     console.log("Filing Collections");
     let saves = [];
@@ -23,7 +30,6 @@ module.exports.createBase = () => {
                 console.log("User save failed")
                 console.log(err)
             }
-            console.log(saved)
             console.log("User saved")
         }));
     
@@ -45,7 +51,6 @@ module.exports.createBase = () => {
                     console.log("Artist save failed")
 
                 }
-                console.log(saved)
                 console.log("Artist saved")
 
             }));
@@ -77,8 +82,7 @@ module.exports.createBase = () => {
                         console.log("Song save failed")
 
                     }
-                    console.log(saved)
-                    console.log("Song saved")
+                    // console.log("Song saved")
                 }));
             }
             //     saves.push(newSong.save().then(() => {
@@ -101,7 +105,6 @@ module.exports.createBase = () => {
                             console.log("Playlist save failed")
 
                         }
-                        console.log(saved)
                         console.log("Playlist saved")
                     }));
                 // saves.push(newPlaylist.save().then(() => {
@@ -121,7 +124,6 @@ module.exports.createBase = () => {
                             console.log(err)
 
                         }
-                        console.log(saved)
                         console.log("Album saved")
                     }));
                 }

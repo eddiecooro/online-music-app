@@ -9,4 +9,4 @@ PlayListModel.schema = {
 }
 PlayListModel.useTimestamps('CreatedAt','UpdatedAt')
 
-module.exports = PlayListModel
+export default PlayListModel

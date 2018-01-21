@@ -6,10 +6,11 @@ const bcrypt = require("bcrypt");
 
 var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
-UserModel.setUniqueKey(['username', 'email'])
+UserModel.setUniqueKey('username')
+UserModel.setUniqueKey('email')
 UserModel.on('beforeSave', (obj) => {
     console.log('encrypting Password')
-    obj.password = bcrypt.hashSync(onj.password, 8)
+    obj.password = bcrypt.hashSync(obj.password, 8)
     return obj
 })
 
@@ -29,7 +30,6 @@ UserModel.schema = {
 
     email: {
         type: String,
-        unique: true,
         required: true,
         lowercase: true,
         match: emailRegex,
@@ -42,4 +42,4 @@ UserModel.schema = {
 }
 UserModel.useTimestamps('CreatedAt','UpdatedAt')
 
-module.exports = UserModel
+export default UserModel

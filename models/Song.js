@@ -7,10 +7,10 @@ SongModel.schema ={
     genre: {type:Array},
     lyrics: {type:Array},
     releaseDate: {type:Date},
-    url: {type:String,require:true},
+    url: {type:String},
     cover: {type:String},
     tags:{type:Array}
 }
 SongModel.useTimestamps("CreatedAt","UpdatedAdd")
 
-module.exports= SongModel
+export default SongModel

@@ -7,4 +7,4 @@ AlbumModel.schema = {
 }
 AlbumModel.useTimestamps('CreatedAt','UpdatedAt')
 
-module.exports = AlbumModel
+export default AlbumModel

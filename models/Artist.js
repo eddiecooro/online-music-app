@@ -9,4 +9,4 @@ ArtistModel.schema = {
 }
 ArtistModel.useTimestamps('CreatedAt','UpdatedAt')
 
-module.exports = ArtistModel;
+export default ArtistModel;
