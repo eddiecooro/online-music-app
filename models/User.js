@@ -9,7 +9,6 @@ var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 UserModel.setUniqueKey('username')
 UserModel.setUniqueKey('email')
 UserModel.on('beforeSave', (obj) => {
-    console.log('encrypting Password')
     obj.password = bcrypt.hashSync(obj.password, 8)
     return obj
 })
