@@ -1,14 +1,10 @@
+import {neo4jgraphql} from 'neo4j-graphql-js';
+
 module.exports = {
     //Root Query
     Query: {
-        //Every Type Is A Node
-        //NodeID like => User:fj392739872dk
         node: (source, args, context) => {
-            return context.db.getData_Id(...context.db.nodeIdToDbId(args.id)).then((data) => {
-                return data;
-            }).catch((err) => {
-                console.log(err);
-            });
+            return neo4jgraphql(source, args, context, info);
         },
         search: (source, args, context)=>{
             let modelsToSearch = ["User","Playlist","Song","Artist","Album"];
