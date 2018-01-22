@@ -25,7 +25,7 @@ module.exports = {
             } else {
                 return null
             }
-        }
+        },
     },
     //Specify Which Resolve Should Go
     Node: {

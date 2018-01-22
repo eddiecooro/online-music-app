@@ -15,7 +15,7 @@ module.exports = {
             });
         },
 
-        artist: async (source, args, context) => {
+        artists: async (source, args, context) => {
             var songId = []
             var ArtistList = []
             //Get SongId From AlbumId

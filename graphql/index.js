@@ -7,6 +7,7 @@ const Playlist_Resolve = require('./resolvers/Playlist_Resolver');
 const Artist_Resolve = require('./resolvers/Artist_Resolver');
 const Album_Resolve = require('./resolvers/Album_Resolver');
 const Pagination_Resolver = require('./resolvers/Pagination_Resolver');
+const Root_Mutation = require('./mutations/Root_Mutation');
 import { typeDefs } from './typeDefs';
 
 var resolvers = merge(Root_Resolve,
@@ -15,8 +16,10 @@ var resolvers = merge(Root_Resolve,
     Playlist_Resolve,
     Artist_Resolve,
     Album_Resolve,
-    Pagination_Resolver)
-
+    Pagination_Resolver,
+    Root_Mutation
+)
+    
 export default makeExecutableSchema({
     typeDefs,
     resolvers
