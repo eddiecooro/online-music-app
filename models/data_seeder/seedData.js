@@ -10,59 +10,80 @@ import AlbumModel from "../Album"
 var Album = AlbumModel
 const Chance = require('chance');
 const chance = new Chance();
+const db = require('../../DataBase/DataBaseConnection')
 module.exports.createBase = () => {
     console.log("Filing Collections");
-    let saves = { User: [], Artist:[],Song:[],Playlist:[],Album:[]};
-
+    let saves = [];
+    let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
 
     for (let i = 0; i < 100; i++) {
         let password = chance.word().toString();
-        User.save({
-            emailValidated: chance.bool(),
-            username: chance.word(),
-            password: password,
-            raw_password: password,
-            email: chance.email(),
-            avatar: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-            nickname: chance.first(),
-            gender: chance.gender(),
-            age: chance.age(),
-        }, async (err, saved) => {
-            if (err) {
+        saves.push(
+            new Promise((reslolve, reject) => {
+                User.save({
+                    emailValidated: chance.bool(),
+                    username: chance.word(),
+                    password: password,
+                    raw_password: password,
+                    email: chance.email(),
+                    avatar: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
+                    nickname: chance.first(),
+                    gender: chance.gender(),
+                    age: chance.age(),
+                }, (err, saved) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    reslolve(saved)
+
+                });
+            }).then((saved) => {
+                ids.User.push(saved)
+                console.log("User saved")
+
+            }).catch((err) => {
                 console.log("User save failed")
                 console.log(err)
                 return err
-            }
-            await saves.User.push(saved)
-            console.log("User saved")
-
-        });
+            })
+        )
     }
     for (let i = 0; i < 100; i++) {
-        Artist.save({
-            name: chance.first(),
-            avatar: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-            age: chance.age(),
-            description: chance.paragraph(),
-        }, async (err, saved) => {
-            if (err) {
+        saves.push(
+            new Promise((resolve, reject) => {
+                Artist.save({
+                    name: chance.first(),
+                    avatar: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
+                    age: chance.age(),
+                    description: chance.paragraph(),
+                }, (err, saved) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve(saved)
+                })
+            }).then((saved) => {
+                ids.Artist.push(saved)
+                console.log("Artist saved")
+
+            }).catch((err) => {
                 console.log(err)
                 console.log("Artist save failed")
                 return err
-            }
-            await saves.Artist.push(saved)
-            console.log("Artist saved")
 
-        });
+            })
+        );
     }
 
-        for (let i = 0; i < 1000; i++) {
-            let genre = [];
-            for (let i = 0; i < 10; i++) {
-                if (chance.bool()) {
-                    genre.push(chance.word());
-                }
+    for (let i = 0; i < 10; i++) {
+        let genre = [];
+        for (let i = 0; i < 10; i++) {
+            if (chance.bool()) {
+                genre.push(chance.word());
             }
+        }
+        saves.push(
+            new Promise((resolve, reject) => {
                 Song.save({
                     name: chance.word(),
                     description: chance.paragraph(),
@@ -70,64 +91,140 @@ module.exports.createBase = () => {
                     lyrics: [chance.paragraph()],
                     releaseDate: chance.date(),
                     cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-                }, async (err, saved) => {
+                }, (err, saved) => {
                     if (err) {
-                        console.log(err)
-                        console.log("Song save failed")
-
+                        reject(err)
                     }
-                   await saves.Song.push(saved)
-                    console.log("Song saved")
-                });
-            }
+                    resolve(saved)
+                })
+            }).then((saved) => {
+                ids.Artist.push(saved)
+                console.log("Song saved")
 
-            for (let i = 0; i < 50; i++) {
-                let expireDate = chance.bool() ? chance.date() : null;
-                    Playlist.save({
-                        name: chance.word(),
-                        cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-                        private: chance.bool(),
-                        expireDate: expireDate
-                    },async (err, saved) => {
-                        if (err) {
-                            console.log(err)
-                            console.log("Playlist save failed")
+            }).catch((err) => {
+                console.log(err)
+                console.log("Song save failed")
+                return err
 
-                        }
-                        await saves.Playlist.push(saved)
-                        console.log("Playlist saved")
-                    });
-        }
-        for (let i = 0; i < 100; i++) {
-                    Album.save({
-                        name: chance.word(),
-                        cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-                        releaseDate: chance.date()
-                    }, async (err, saved) => {
-                        if (err) {
-                            console.log("Album save failed")
-                            console.log(err)
+            })
+        );
+    }
 
-                        }
-                        await saves.Album.push(saved)
-                        console.log("Album saved")
-                    });
+    for (let i = 0; i < 50; i++) {
+        let expireDate = chance.bool() ? chance.date() : null;
+        saves.push(
+            new Promise((resolve, reject) => {
+                Playlist.save({
+                    name: chance.word(),
+                    cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
+                    private: chance.bool(),
+                    expireDate: expireDate
+                }, (err, saved) => {
+                    if (err) {
+                   reject(err)
+                    }
+                    resolve(saved)
+                })
+            }).then((saved) => {
+                ids.Artist.push(saved)
+                console.log("Playlist saved")
+
+            }).catch((err) => {
+                console.log(err)
+                console.log("Playlist save failed")
+                return err
+
+            })
+        );
+    }
+    for (let i = 0; i < 100; i++) {
+        saves.push(
+    new Promise((resolve,reject) =>{
+            Album.save({
+                name: chance.word(),
+                cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
+                releaseDate: chance.date()
+            },  (err, saved) => {
+                if (err) {
+               reject(err)
                 }
-        
-return saves
+                resolve(saved)
+            })
+        }).then((saved) => {
+            ids.Artist.push(saved)
+           console.log("Album saved")
+
+       }).catch((err) => {
+           console.log(err)
+           console.log("Album save failed")
+           return err
+
+       })
+        );
+    }
+
+    return {saves:saves,ids:ids}
+}
+
+
+
+
+module.exports.MakeRels = (data) => {
+    console.log("Making Relations");
+    var a = []
+
+    let userCount = data.User.length;
+    let songCount = data.Song.length;
+    let albumCount = data.Album.length;
+    let artistCount = data.Artist.length;
+    let playlistCount = data.Playlist.length;
+
+    // Adding songs to Albums
+    for (let i = 0; i < songCount; i++) {
+        let currentSong = data.Song[i]
+        let random = chance.integer({ min: 0, max: albumCount - 1 });
+        let album = data.Album[random]
+        let albumId = album.id;
+        db.rel.create(currentSong.id, 'Song_Of', albumId, (err, rel) => {
+            if (err) {
+                console.log("SongOf_Album Update Failed");
+                return err
+            }
+            console.log("SongOf_Album Added");
+            return true
+        });
+    }
+    //     // // Adding Song_Of_Artist Rels
+    // let possibleSongRels = ['Singer', 'Producer', 'Writter', 'Composer'];
+    // for (let i = 0; i < artistCount; i++) {
+    //     for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+    //         let random = chance.integer({ min: 0, max: songCount - 1 });
+    //         let song = Song[i]
+    //         let songId = song.id;
+    //         songs[j] = {
+    //             rel: possibleSongRels[chance.integer({ min: 0, max: possibleSongRels.length - 1 })],
+    //             song: songId
+    //         }
+    //     }
+
+    //     let currentArtist = await Artist.find().limit(-1).skip(i);
+    //     currentArtist = currentArtist[0];
+    //     currentArtist.songs = songs;
+    //     Artist.update({ _id: currentArtist._id }, currentArtist).then((w) => {
+    //         console.log("Artist Song Added");
+    //     }).catch((err) => {
+    //         console.log("Artist Song Update Failed");
+    //     });
+    // }
 
 }
-module.exports.MakeRels= (data) =>{
-    
-} 
 
 // // module.exports.makeRelations = async function () {
-// //     console.log("Making Relations");
-// //     let userCount = await User.count();
-// //     let songCount = await Song.count();
-// //     let albumCount = await Album.count();
-// //     let artistCount = await Artist.count();
-// //     let playlistCount = await Playlist.count();
+//     let userCount = await User.count();
+//     let songCount = await Song.count();
+//     let albumCount = await Album.count();
+//     let artistCount = await Artist.count();
+//     let playlistCount = await Playlist.count();
 
 // //     // // Adding songs to Albums
 // //     for (let i = 0; i < songCount; i++) {
