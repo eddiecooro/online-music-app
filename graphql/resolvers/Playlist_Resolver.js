@@ -7,7 +7,7 @@ module.exports = {
         },
         
         tracks: (source,args,context) =>{
-            return context.driver.getRels(source,"CONTAINS","OUT", "Song");            
+            return context.driver.getRels(source,{label:"CONTAINS",direction:"OUT"}, "Song");            
         },
         trackCount: (source,args,context) =>{
             return 2
