@@ -15,11 +15,8 @@ var resolvers = merge(Root_Resolve,
     Song_Resolve,
     Playlist_Resolve,
     Artist_Resolve,
-    Album_Resolve,
-    Pagination_Resolver,
-    Root_Mutation
-)
-    
+    Album_Resolve,)
+
 export default makeExecutableSchema({
     typeDefs,
     resolvers

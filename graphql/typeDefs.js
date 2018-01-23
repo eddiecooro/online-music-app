@@ -14,29 +14,6 @@ export const typeDefs = `
         id: ID!
     }
 
-    enum gender{
-        MALE
-        FEMALE
-    }
-
-    type UserSongEdge{
-        node: Song
-        cursor: String
-
-    }
-    type PageInfo{
-        startCursor : String
-        endCursor: String
-        hasNextPage : Boolean
-        hasPreviousPage: Boolean
-    }
-    type UserSongConnection{
-        edges: [UserSongEdge]
-        pageInfo: PageInfo
-    }
-    
-
-
     type User implements Node {
         id: ID!
         emailValidated: Boolean
@@ -46,7 +23,6 @@ export const typeDefs = `
         avatar: String
         age: Int
         playlists: [Playlist]
-        getSongs(first: Int,last: Int,before: String, after: String ): UserSongConnection
         followedArtists: [Artist]
         listenedSongs: [Song]
         likedSongs: [Song]

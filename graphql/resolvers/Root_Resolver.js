@@ -1,14 +1,24 @@
 module.exports = {
     //Root Query
     Query: {
-        //Every Type Is A Node
-        //NodeID like => User:fj392739872dk
-        node: (source, args, context) => {
-            return context.db.getData_Id(...context.db.nodeIdToDbId(args.id)).then((data) => {
-                return data;
-            }).catch((err) => {
-                console.log(err);
-            });
+        node: (source, args, context, info) => {
+            let [label, id] = context.driver.nodeIdToDbId(args.id);
+            let cypher = `MATCH (node:${label}) WHERE ID(node) = ${id} RETURN node`
+            return new Promise((resolve,reject)=>{
+                context.driver.query(cypher,(err,node)=>{
+                    if(err){
+                        reject(err);
+                    } else {
+                        node = node[0];
+                        if(!node){
+                            reject(label + " with Id: " + id + " not found");
+                        } else {
+                            node.__label = label;
+                            resolve(node);
+                        }
+                    }
+                })
+            })
         },
         search: (source, args, context)=>{
             let modelsToSearch = ["User","Playlist","Song","Artist","Album"];
@@ -30,7 +40,7 @@ module.exports = {
     //Specify Which Resolve Should Go
     Node: {
         __resolveType(source, context, info) {
-            return source.__modelName;
+            return source.__label
         }
     },
    
