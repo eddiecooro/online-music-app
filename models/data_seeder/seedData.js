@@ -1,13 +1,8 @@
-import UserModel from "../User"
-var User = UserModel
-import SongModel from "../Song"
-var Song = SongModel
-import PlaylistModel from "../Playlist"
-var Playlist = PlaylistModel
-import ArtistModel from "../Artist"
-var Artist = ArtistModel
-import AlbumModel from "../Album"
-var Album = AlbumModel
+import User from "../User"
+import Song from "../Song"
+import Playlist from "../Playlist"
+import Artist from "../Artist"
+import Album from "../Album"
 
 const Chance = require('chance');
 const chance = new Chance();
@@ -204,7 +199,7 @@ module.exports.MakeRels = async () => {
     })
     //Getting Playlist Ids
     ids.Playlist = await new Promise((resolve, reject) => {
-        db.nodesWithLabel('PlayList', (err, result) => {
+        db.nodesWithLabel('Playlist', (err, result) => {
             if (err) {
                 console.log(err)
                 reject(err)

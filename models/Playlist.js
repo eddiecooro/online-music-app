@@ -1,12 +1,12 @@
 var db = require('../DataBase/DataBaseConnection')
-var PlayListModel = require('seraph-model')(db, 'PlayList')
+var PlaylistModel = require('seraph-model')(db, 'Playlist')
 
-PlayListModel.schema = {
+PlaylistModel.schema = {
     name: { type: String, required: true },
     cover: { type: String },
     private: { type: Boolean, default: true },
     expireDate: { type: Date }
 }
-PlayListModel.useTimestamps('CreatedAt','UpdatedAt')
+PlaylistModel.useTimestamps('CreatedAt','UpdatedAt')
 
-export default PlayListModel
+export default PlaylistModel
