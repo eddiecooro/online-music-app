@@ -12,16 +12,13 @@ const graphql = require('graphql');
 const graphqlHttp = require('express-graphql');
 // adding helmet secury middleware
 const helmet = require('helmet');
+let driver = require("./DataBase/DataBaseConnection");  
 
 import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';
 // import { User } from './models';
 import { jwtOptions } from './config';
 
-var neo = require('seraph')('http://localhost:7474')    
-if(neo){
-  console.log("Connected Seccessfuly");
-}
 
 var app = express();
 
@@ -57,14 +54,14 @@ app.use(passport.initialize());
 
 app.use('/login',login)
 // const db = require('./models/databaseAdapter')
-app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
-    // let context = {
-    //   db: db
-    // };
+app.use('/graphql',  (req,res,next)=>{
+    let context = {
+      driver: driver
+    };
     // if(req.user) context.user = req.user;
     return graphqlHttp({ 
       schema: graphqlSchema,
-      // context:context,
+      context:context,
       graphiql:true,
       pretty:true
      })(req,res,next)
@@ -90,7 +87,7 @@ app.use(function (err, req, res, next) {
 });
 
 process.on('SIGINT', function () {
-  mongoose.connection.close(function () {
+  driver.close(function () {
     console.log('Mongoose default connection disconnected through app termination');
     process.exit(0);
   });

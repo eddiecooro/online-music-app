@@ -8,7 +8,7 @@ module.exports = {
             playlists: (source, args, context) => {
                 return neo4jgraphql(source, args, context, info);
             },
-            songs: async (source, args, context) => {
+            songs: (source, args, context) => {
                 return neo4jgraphql(source, args, context, info);
             },
             followedArtists: (source, args, context) => {

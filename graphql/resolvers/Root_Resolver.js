@@ -3,7 +3,7 @@ import {neo4jgraphql} from 'neo4j-graphql-js';
 module.exports = {
     //Root Query
     Query: {
-        node: (source, args, context) => {
+        user: (source, args, context, info) => {
             return neo4jgraphql(source, args, context, info);
         },
         search: (source, args, context)=>{
