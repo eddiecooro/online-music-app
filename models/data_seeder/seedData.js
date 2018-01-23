@@ -258,7 +258,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
             let random = chance.integer({ min: 0, max: songCount - 1 });
             let random_roll = chance.integer({ min: 0, max: possibleSongRels.length - 1 });
             let song = ids.Song[random];
-            db.rel.create(artist, 'ARTIST_OF', song, { rools: possibleSongRels[random_roll] }, (err, rel) => {
+            db.rel.create(artist, 'ARTIST_OF', song, { rolls: possibleSongRels[random_roll] }, (err, rel) => {
                 if (err) {
                     console.log("ArtistOf_Song Create Failed");
                     return err
@@ -296,7 +296,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
             let random = chance.integer({ min: 0, max: songCount - 1 });
             let song = ids.Song[random]
-            db.rel.create(song, 'Song_Of', playlist, (err, rel) => {
+            db.rel.create(song, 'CONTAIN', playlist, (err, rel) => {
                 if (err) {
                     console.log("SongOf_Playlist Create Failed");
                     return err
@@ -310,7 +310,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
 
 
     //  Adding user Song Rels
-    let possibleUserSongRels = ['Listened', 'Liked', 'Hated'];
+    let possibleUserSongRels = ['LISTENED', 'LIKED', 'HATED'];
     for (let i = 0; i < userCount; i++) {
         let user = ids.User[i]
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
@@ -335,7 +335,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
             let random = chance.integer({ min: 0, max: playlistCount - 1 });
             let playlist = ids.Playlist[random]
-            db.rel.create(playlist, 'Created_By', user, (err, rel) => {
+            db.rel.create(playlist, 'CREATED_BY', user, (err, rel) => {
                 if (err) {
                     console.log("User_Playlist Rel Create Failed");
                     return err
