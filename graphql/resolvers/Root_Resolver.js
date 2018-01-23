@@ -30,7 +30,7 @@ module.exports = {
         },
         viewer: (source,args,context)=>{
             if(context.user){
-                context.user.__modelName = "User";
+                context.user.__label = "User";
                 return context.user;
             } else {
                 return null
