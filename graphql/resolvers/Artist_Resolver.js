@@ -12,7 +12,7 @@ module.exports = {
         },
 
         songs: (source, args, context) => {
-            return context.driver.getRels(source,{label:"ARTIST_OF",direction:"OUT"}, "Artist");       
+            return context.driver.getRels(source,{label:"ARTIST_OF",direction:"OUT"}, "Song");       
         },
     }
 }

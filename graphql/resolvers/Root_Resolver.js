@@ -22,7 +22,7 @@ module.exports = {
         },
         search: (source, args, context)=>{
             let modelsToSearch = ["User","Playlist","Song","Artist","Album"];
-            return db.search(modelsToSearch,args.text).then((data)=>{
+            return context.driver.search(modelsToSearch,args.text).then((data)=>{
                 return data;
             }).catch((err)=>{
                 console.log(err);

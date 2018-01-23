@@ -2,6 +2,7 @@ export const typeDefs = `
     enum gender {
         MALE
         FEMALE
+        OTHER
     }
     type Query {
         node(id:ID!): Node
