@@ -1,4 +1,4 @@
-var db = require('../DataBase/DataBaseConnection')
+var db = require('../database/databaseAdapter')
 var UserModel = require('seraph-model')(db, 'User')
 const bcrypt = require("bcrypt");
 
