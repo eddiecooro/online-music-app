@@ -12,7 +12,6 @@ var Album = AlbumModel
 const Chance = require('chance');
 const chance = new Chance();
 const db = require('../../DataBase/DataBaseConnection')
-let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
 
 module.exports.createBase = () => {
     console.log("Filing Collections");
@@ -74,7 +73,7 @@ module.exports.createBase = () => {
         );
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 200; i++) {
         let genre = [];
         for (let i = 0; i < 10; i++) {
             if (chance.bool()) {
@@ -165,57 +164,65 @@ module.exports.createBase = () => {
 
 
 
-module.exports.MakeRels = () => {
+module.exports.MakeRels = async () => {
+let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
+  
     console.log("Gettin Ids")
     //Getting User Ids
-     db.nodesWithLabel('User', (err, result) => {
-        if (err) {
-            console.log(err)
-            return err
-        }
-        for (let node of result) {
-            ids.User.push(node.id)
-        }
+    ids.User = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('User', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
     })
+
     //Getting Artist Ids
-     db.nodesWithLabel('Artist', (err, result) => {
-        if (err) {
-            console.log(err)
-            return err
-        }
-        for (let node of result) {
-            ids.Artist.push(node.id)
-        }
+    ids.Artist = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Artist', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
     })
     //Getting Song Ids
-     db.nodesWithLabel('Song', (err, result) => {
-        if (err) {
-            console.log(err)
-            return err
-        }
-        for (let node of result) {
-            ids.Song.push(node.id)
-        }
+    ids.Song = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Song', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
     })
     //Getting Playlist Ids
-    db.nodesWithLabel('Playlist', (err, result) => {
-        if (err) {
-            console.log(err)
-            return err
-        }
-        for (let node of result) {
-            ids.Playlist.push(node.id)
-        }
+    ids.Playlist = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('PlayList', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
     })
     //Getting Album Ids
-    db.nodesWithLabel('Album', async (err, result) => {
-        if (err) {
-            console.log(err)
-            return err
-        }
-        for (let node of result) {
-            ids.Album.push(node.id)
-        }
+    ids.Album = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Album', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
     })
 
 
@@ -225,13 +232,13 @@ module.exports.MakeRels = () => {
     let albumCount = ids.Album.length;
     let artistCount = ids.Artist.length;
     let playlistCount = ids.Playlist.length;
-    console.log(albumCount)
+
     // Adding songs to Albums
     for (let i = 0; i < songCount; i++) {
         let currentSong = ids.Song[i]
         let random = chance.integer({ min: 0, max: albumCount - 1 });
         let album = ids.Album[random]
-        db.rel.create(currentSong, 'Song_Of', album, (err, rel) => {
+        db.rel.create(currentSong, 'SONG_OF', album, (err, rel) => {
             if (err) {
                 console.log("SongOf_Album Update Failed");
                 return err
@@ -251,7 +258,7 @@ module.exports.MakeRels = () => {
             let random = chance.integer({ min: 0, max: songCount - 1 });
             let random_roll = chance.integer({ min: 0, max: possibleSongRels.length - 1 });
             let song = ids.Song[random];
-            db.rel.create(artist, possibleSongRels[random_roll], song, (err, rel) => {
+            db.rel.create(artist, 'ARTIST_OF', song, { rools: possibleSongRels[random_roll] }, (err, rel) => {
                 if (err) {
                     console.log("ArtistOf_Song Create Failed");
                     return err
@@ -264,24 +271,24 @@ module.exports.MakeRels = () => {
 
 
     // Adding album-artist Rels
-    let possibleAlbumRels = ['Singer_Of', 'Producer_Of', 'Writter_Of', 'Composer_Of'];
-    for (let i = 0; i < artistCount; i++) {
-        let artist = ids.Artist[i]
-        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
-            let random = chance.integer({ min: 0, max: albumCount - 1 });
-            let random_roll = chance.integer({ min: 0, max: possibleAlbumRels.length - 1 });
-            let album = ids.Album[random]
-            db.rel.create(artist, possibleAlbumRels[random_roll], album, (err, rel) => {
-                if (err) {
-                    console.log("ArtistOf_Album Create Failed");
-                    return err
-                }
-                console.log("ArtistOf_Album Added");
-                return true
-            })
-        }
+    // let possibleAlbumRels = ['Singer_Of', 'Producer_Of', 'Writter_Of', 'Composer_Of'];
+    // for (let i = 0; i < artistCount; i++) {
+    //     let artist = ids.Artist[i]
+    //     for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+    //         let random = chance.integer({ min: 0, max: albumCount - 1 });
+    //         let random_roll = chance.integer({ min: 0, max: possibleAlbumRels.length - 1 });
+    //         let album = ids.Album[random]
+    //         db.rel.create(artist, possibleAlbumRels[random_roll], album, (err, rel) => {
+    //             if (err) {
+    //                 console.log("ArtistOf_Album Create Failed");
+    //                 return err
+    //             }
+    //             console.log("ArtistOf_Album Added");
+    //             return true
+    //         })
+    //     }
 
-    }
+    // }
 
     // Adding songs to playlists
     for (let i = 0; i < playlistCount; i++) {
@@ -322,7 +329,7 @@ module.exports.MakeRels = () => {
         }
     }
 
-
+    //Adding User Playlist Rels
     for (let i = 0; i < userCount; i++) {
         let user = ids.User[i]
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
@@ -339,8 +346,34 @@ module.exports.MakeRels = () => {
 
         }
     }
+
+    //Adding User Artist Rels
+    for (let i = 0; i < userCount; i++) {
+        let user = ids.User[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: artistCount - 1 });
+            let artist = ids.Artist[random]
+            db.rel.create(user, 'FOLLOWED', artist, (err, rel) => {
+                if (err) {
+                    console.log("User_Artist Rel Create Failed");
+                    return err
+                }
+                console.log("User_Artist Rel Added");
+                return true
+            })
+
+        }
+    }
+
+
     return true
 }
+
+
+
+
+
+
 
 // // module.exports.makeRelations = async function () {
 //     let userCount = await User.count();
