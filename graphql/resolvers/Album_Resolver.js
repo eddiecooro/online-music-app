@@ -1,18 +1,11 @@
 module.exports = {
     Album: {
         id: (source, args, context) => {
-            return context.db.dbIdToNodeId(source.__modelName, source._id);
+            return context.driver.dbIdToNodeId("User",source.id);
         },
 
         songs: (source, args, context) => {
-            return context.db.getSong_AlbumId("Song", source._id).then((data) => {
-                if (!Array.isArray(data)) {
-                    data = [data];
-                }
-                return data;
-            }).catch((err) => {
-                console.log(err);
-            });
+            return context.driver.getRels(source,"SONG_OF","IN", "Playlist");
         },
 
         artist: async (source, args, context) => {

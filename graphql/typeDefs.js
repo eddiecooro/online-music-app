@@ -18,7 +18,6 @@ export const typeDefs = `
         avatar: String
         age: Int
         playlists: [Playlist]
-        songs: [Song]
         followedArtists: [Artist]
         listenedSongs: [Song]
         likedSongs: [Song]

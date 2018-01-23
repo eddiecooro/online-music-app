@@ -1,37 +1,13 @@
 module.exports = {
     Song: {
         id: (source, args, context) => {
-            return context.db.dbIdToNodeId(source.__modelName, source._id);
+            return context.driver.dbIdToNodeId("User",source.id);
         },
         album: (source, args, context) => {
-            return context.db.getData_Id("Album", source.albumId).then((data) => {
-                if (!Array.isArray(data)) {
-                    data = [data]
-                }
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
+            return context.driver.getRels(source,"SONG_OF","OUT", "Playlist").then((res)=>(res[0]));
         },
         artists: (source, args, context) => {
-            return context.db.getData_Id("Artist",context.db.getArtist_SongId).then((data) => {
-                if (!Array.isArray(data)) {
-                    data = [data]
-                }
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
-        },
-        playlist: (source,args,context) =>{
-            return context.db.getPlaylist_SongId("Playlist",source._id).then((data) =>{
-                if(!Array.isArray(data)){
-                    data = [data]
-                }
-                return data
-            }).catch((err) => {
-                console.log(err)
-            });
+            
         }
     }
 }

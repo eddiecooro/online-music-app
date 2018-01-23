@@ -1,30 +1,22 @@
-function dbIdToNodeId(label, id){
-    return label + ":" + id;
-}
 module.exports = {
     User: {
             id: (source, args, context, info) => {
-                return dbIdToNodeId("User",source.id);
+                return context.driver.dbIdToNodeId("User",source.id);
             },
             playlists: (source, args, context) => {
-                return new Promise((resolve,reject)=>{
-                    context.driver.query(cypher,(err,node)=>{
-                        if(err) reject(err);
-                        node = node[0];
-                        node.__label = label;
-                        resolve(node);
-                    })
-                })
-            },
-            songs: (source, args, context) => {
+                return context.driver.getRels(source,"CREATED_BY","IN","Playlist");
             },
             followedArtists: (source, args, context) => {
+                return context.driver.getRels(source, "FOLLOWED","OUT", "Artist");
             },
             listenedSongs: (source, args, context) => {
+                return context.driver.getRels(source, "LISTENED","OUT", "Song");
             },
             likedSongs: (source, args, context) => {
+                return context.driver.getRels(source, "LIKED","OUT", "Song");                                
             },
             hatedSongs: (source, args, context) => {
+                return context.driver.getRels(source, "HATED","OUT", "Song");                                
             }
         }
     }

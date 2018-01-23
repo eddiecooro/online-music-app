@@ -1,12 +1,8 @@
-import {neo4jgraphql} from 'neo4j-graphql-js';
-function nodeIdToDbId(id){
-    return id.split(":");
-}
 module.exports = {
     //Root Query
     Query: {
         node: (source, args, context, info) => {
-            let [label, id] = nodeIdToDbId(args.id);
+            let [label, id] = context.driver.nodeIdToDbId(args.id);
             let cypher = `MATCH (node:${label}) WHERE ID(node) = ${id} RETURN node`
             return new Promise((resolve,reject)=>{
                 context.driver.query(cypher,(err,node)=>{
