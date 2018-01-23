@@ -3,7 +3,9 @@ require('babel-polyfill');
 const seedData = require('./seedData');
 
 Promise.all(seedData.createBase())
-  .then(seedData.MakeRels())
+  .then(()=>{
+    seedData.MakeRels()
+  })
 
 
 // process.on('SIGINT', function() {  

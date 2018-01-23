@@ -165,7 +165,7 @@ module.exports.createBase = () => {
 
 
 module.exports.MakeRels = async () => {
-let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
+    let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
   
     console.log("Gettin Ids")
     //Getting User Ids
@@ -296,7 +296,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
             let random = chance.integer({ min: 0, max: songCount - 1 });
             let song = ids.Song[random]
-            db.rel.create(palylist, 'CONTAINS', song, (err, rel) => {
+            db.rel.create(playlist, 'CONTAINS', song, (err, rel) => {
                 if (err) {
                     console.log("SongOf_Playlist Create Failed");
                     return err
