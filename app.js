@@ -12,7 +12,7 @@ const graphql = require('graphql');
 const graphqlHttp = require('express-graphql');
 // adding helmet secury middleware
 const helmet = require('helmet');
-let driver = require("./DataBase/DataBaseConnection");  
+let driver = require("./database/databaseAdapter");  
 
 import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';

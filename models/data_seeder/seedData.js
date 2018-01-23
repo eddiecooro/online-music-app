@@ -6,7 +6,7 @@ import Album from "../Album"
 
 const Chance = require('chance');
 const chance = new Chance();
-const db = require('../../DataBase/DataBaseConnection')
+const db = require('../../database/databaseAdapter')
 
 module.exports.createBase = () => {
     console.log("Filing Collections");

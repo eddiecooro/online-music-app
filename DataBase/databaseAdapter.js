@@ -1,4 +1,4 @@
-var dbConfig = require('./DatabaseConfig')
+var dbConfig = require('./databaseConfig')
 var db = require('seraph')({server: dbConfig.url+":"+dbConfig.port})
 
 
@@ -22,7 +22,6 @@ db.getRels = function(source,rel,dir,targetType){
         WHERE ID(n) = ${source.id}
         RETURN t
     `
-    console.log(cypher);
     return new Promise((resolve,reject)=>{
         this.query(cypher,(err,nodes)=>{
             if(err) reject(err);
