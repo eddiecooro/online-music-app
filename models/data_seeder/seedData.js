@@ -296,7 +296,7 @@ let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
         for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
             let random = chance.integer({ min: 0, max: songCount - 1 });
             let song = ids.Song[random]
-            db.rel.create(song, 'CONTAIN', playlist, (err, rel) => {
+            db.rel.create(song, 'CONTAINS', playlist, (err, rel) => {
                 if (err) {
                     console.log("SongOf_Playlist Create Failed");
                     return err
