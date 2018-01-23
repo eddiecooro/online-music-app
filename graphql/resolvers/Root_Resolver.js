@@ -6,10 +6,17 @@ module.exports = {
             let cypher = `MATCH (node:${label}) WHERE ID(node) = ${id} RETURN node`
             return new Promise((resolve,reject)=>{
                 context.driver.query(cypher,(err,node)=>{
-                    if(err) reject(err);
-                    node = node[0];
-                    node.__label = label;
-                    resolve(node);
+                    if(err){
+                        reject(err);
+                    } else {
+                        node = node[0];
+                        if(!node){
+                            reject(label + " with Id: " + id + " not found");
+                        } else {
+                            node.__label = label;
+                            resolve(node);
+                        }
+                    }
                 })
             })
         },
