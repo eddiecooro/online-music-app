@@ -1,4 +1,8 @@
 export const typeDefs = `
+    enum gender {
+        MALE
+        FEMALE
+    }
     type Query {
         node(id:ID!): Node
         search(text: String!): [Node]
