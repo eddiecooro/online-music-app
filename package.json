@@ -24,8 +24,6 @@
     "mongoose": "^5.0.0-rc2",
     "mongoose-bcrypt": "^1.5.0",
     "morgan": "~1.9.0",
-    "neo4j-driver": "^1.5.3",
-    "neo4j-graphql-js": "^0.1.8",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
     "seraph": "^0.15.3",

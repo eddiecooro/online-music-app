@@ -1,12 +1,6 @@
 var dbConfig = require('./DatabaseConfig')
-import {v1 as neo4j} from 'neo4j-driver';
+var db = require('seraph')({server: dbConfig.url+":"+dbConfig.port})
 
-let driver = neo4j.driver(dbConfig.url + ":" + dbConfig.port);
-// driver.onCompleted(()=>{
-//     console.log("database Connected")
-// })
-// driver.onError(()=>{
-//     console.log("Error when connecting to database");
-// })
 
-module.exports = driver
+
+module.exports = db

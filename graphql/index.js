@@ -10,7 +10,7 @@ const Pagination_Resolver = require('./resolvers/Pagination_Resolver');
 import { typeDefs } from './typeDefs';
 
 var resolvers = merge(Root_Resolve,
-    // User_Resolve,
+    User_Resolve,
     Song_Resolve,
     Playlist_Resolve,
     Artist_Resolve,

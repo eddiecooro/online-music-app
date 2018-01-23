@@ -1,6 +1,6 @@
 export const typeDefs = `
     type Query {
-        user(id:ID!): Node @cypher(statement: "MATCH (s:User) WHERE ID(s) = {id} RETURN s")
+        node(id:ID!): Node
         search(text: String!): [Node]
         viewer: User
     }
@@ -9,13 +9,8 @@ export const typeDefs = `
         id: ID!
     }
 
-    type UserSongEdge{
-        node: Song
-        cursor: String
-    }
-
     type User implements Node {
-        id: ID! @cypher(statement: "WITH {this} AS this RETURN ID(this)")
+        id: ID!
         emailValidated: Boolean
         username: String!
         email: String!
@@ -31,7 +26,7 @@ export const typeDefs = `
     }
     
     type Playlist implements Node {
-        id: ID! @cypher(statement: "WITH {this} AS this RETURN ID(this)")
+        id: ID!
         name: String
         tracks: [Song]
         cover: String

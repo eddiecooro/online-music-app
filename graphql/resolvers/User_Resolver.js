@@ -1,27 +1,30 @@
-import {neo4jgraphql} from 'neo4j-graphql-js';
-
+function dbIdToNodeId(label, id){
+    return label + ":" + id;
+}
 module.exports = {
     User: {
             id: (source, args, context, info) => {
-                return neo4jgraphql(source, args, context, info);
+                return dbIdToNodeId("User",source.id);
             },
             playlists: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
+                return new Promise((resolve,reject)=>{
+                    context.driver.query(cypher,(err,node)=>{
+                        if(err) reject(err);
+                        node = node[0];
+                        node.__label = label;
+                        resolve(node);
+                    })
+                })
             },
             songs: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
             },
             followedArtists: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
             },
             listenedSongs: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
             },
             likedSongs: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
             },
             hatedSongs: (source, args, context) => {
-                return neo4jgraphql(source, args, context, info);
             }
         }
     }

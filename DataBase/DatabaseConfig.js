@@ -1,7 +1,7 @@
 
 module.exports = {
-    url: 'bolt://localhost',
-    port: '7687',
+    url: 'http://localhost',
+    port: '7474',
     user: '',
     pass: '',
 }
