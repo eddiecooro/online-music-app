@@ -1,8 +1,18 @@
 export const typeDefs = `
+    enum gender {
+        MALE
+        FEMALE
+        OTHER
+    }
     type Query {
         node(id:ID!): Node
         search(text: String!): [Node]
         viewer: User
+    }
+
+    type Mutation {
+        createUser(user:UserInput!): User
+        updateUser(id:ID!,user:UserInput!): User
     }
 
     interface Node{
@@ -40,7 +50,7 @@ export const typeDefs = `
         cover: String
         releaseDate: String
         songs: [Song]
-        artist: [Artist]
+        artists: [Artist]
     }
 
     type Song implements Node {
@@ -67,6 +77,23 @@ export const typeDefs = `
         SingerType: String
         albums: [Album]
         songs: [Song]
+    }
+
+    type UserMutation{
+        add(user: UserInput!): User
+        update(id:ID!,user:UserInput): User
+        delete(id:ID!): User
+        like(songId:ID!): Song
+    }
+
+    input UserInput {
+        username: String
+        email: String
+        password: String
+        nickname: String
+        avatar: String
+        gender: gender
+        age: Int
     }
 
 `

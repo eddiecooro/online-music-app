@@ -1,4 +1,4 @@
-var db = require('../DataBase/DataBaseConnection')
+var db = require('../database/databaseAdapter')
 var ArtistModel = require('seraph-model')(db,'Artist')
 
 ArtistModel.schema = {

@@ -4,10 +4,10 @@ module.exports = {
             return context.driver.dbIdToNodeId("Song",source.id);
         },
         album: (source, args, context) => {
-            return context.driver.getRels(source,"SONG_OF","OUT", "Playlist").then((res)=>(res[0]));
+            return context.driver.getRels(source,{label:"SONG_OF",direction:"OUT"}, "Album").then((res)=>(res[0]));
         },
         artists: (source, args, context) => {
-            return context.driver.getRels(source,"ARTIST_OF","IN", "Artist");            
+            return context.driver.getRels(source,{label:"ARTIST_OF",direction:"IN"}, "Artist");            
         }
     }
 }

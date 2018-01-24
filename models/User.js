@@ -1,4 +1,4 @@
-var db = require('../DataBase/DataBaseConnection')
+var db = require('../database/databaseAdapter')
 var UserModel = require('seraph-model')(db, 'User')
 const bcrypt = require("bcrypt");
 
@@ -9,9 +9,12 @@ var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 UserModel.setUniqueKey('username')
 UserModel.setUniqueKey('email')
 UserModel.on('beforeSave', (obj) => {
-    obj.password = bcrypt.hashSync(obj.password, 8)
+    obj.password = bcrypt.hashSync(obj.password, 12)
     return obj
 })
+UserModel.verifyPassword = function(user,password){
+    return bcrypt.compare(password,user.password)
+}
 
 UserModel.schema = {
     //Comment Just For Dev

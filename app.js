@@ -12,31 +12,35 @@ const graphql = require('graphql');
 const graphqlHttp = require('express-graphql');
 // adding helmet secury middleware
 const helmet = require('helmet');
-let driver = require("./DataBase/DataBaseConnection");  
+let driver = require("./database/databaseAdapter");  
 
 import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';
-// import { User } from './models';
+import User from './models/User';
 import { jwtOptions } from './config';
 
 
 var app = express();
 
-// // setting authenticate strategy
-// const params = {
-//   secretOrKey: jwtOptions.jwtSecret,
-//   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
-// };
-// let strategy = new Strategy(params, async (payload,done)=>{
-//   User.findById(payload.id).then((user)=>{
-//       if(user){
-//           return done(null, user); 
-//       } else {
-//           return done(new Error("User not found"),null);
-//       }
-//   });
-// });
-// passport.use(strategy);
+// setting authenticate strategy
+const params = {
+  secretOrKey: jwtOptions.jwtSecret,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+};
+let strategy = new Strategy(params, async (payload,done)=>{
+  User.read(payload.id, (err,user)=>{
+    if(err){
+      return done(err,null);
+    } else {
+      if(user){
+        return done(null, user); 
+      } else {
+        return done(new Error("User not found"),null);
+      }
+    }
+  });
+});
+passport.use(strategy);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,11 +58,11 @@ app.use(passport.initialize());
 
 app.use('/login',login)
 // const db = require('./models/databaseAdapter')
-app.use('/graphql',  (req,res,next)=>{
+app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
     let context = {
       driver: driver
     };
-    // if(req.user) context.user = req.user;
+    if(req.user) context.user = req.user;
     return graphqlHttp({ 
       schema: graphqlSchema,
       context:context,

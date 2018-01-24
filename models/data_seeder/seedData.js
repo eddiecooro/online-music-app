@@ -1,21 +1,16 @@
-import UserModel from "../User"
-var User = UserModel
-import SongModel from "../Song"
-var Song = SongModel
-import PlaylistModel from "../Playlist"
-var Playlist = PlaylistModel
-import ArtistModel from "../Artist"
-var Artist = ArtistModel
-import AlbumModel from "../Album"
-var Album = AlbumModel
+import User from "../User"
+import Song from "../Song"
+import Playlist from "../Playlist"
+import Artist from "../Artist"
+import Album from "../Album"
+
 const Chance = require('chance');
 const chance = new Chance();
-const db = require('../../DataBase/DataBaseConnection')
+const db = require('../../database/databaseAdapter')
+
 module.exports.createBase = () => {
     console.log("Filing Collections");
     let saves = [];
-    let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
-
     for (let i = 0; i < 100; i++) {
         let password = chance.word().toString();
         saves.push(
@@ -38,7 +33,6 @@ module.exports.createBase = () => {
 
                 });
             }).then((saved) => {
-                ids.User.push(saved)
                 console.log("User saved")
 
             }).catch((err) => {
@@ -63,7 +57,6 @@ module.exports.createBase = () => {
                     resolve(saved)
                 })
             }).then((saved) => {
-                ids.Artist.push(saved)
                 console.log("Artist saved")
 
             }).catch((err) => {
@@ -75,7 +68,7 @@ module.exports.createBase = () => {
         );
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 200; i++) {
         let genre = [];
         for (let i = 0; i < 10; i++) {
             if (chance.bool()) {
@@ -98,7 +91,6 @@ module.exports.createBase = () => {
                     resolve(saved)
                 })
             }).then((saved) => {
-                ids.Artist.push(saved)
                 console.log("Song saved")
 
             }).catch((err) => {
@@ -121,12 +113,11 @@ module.exports.createBase = () => {
                     expireDate: expireDate
                 }, (err, saved) => {
                     if (err) {
-                   reject(err)
+                        reject(err)
                     }
                     resolve(saved)
                 })
             }).then((saved) => {
-                ids.Artist.push(saved)
                 console.log("Playlist saved")
 
             }).catch((err) => {
@@ -139,53 +130,110 @@ module.exports.createBase = () => {
     }
     for (let i = 0; i < 100; i++) {
         saves.push(
-    new Promise((resolve,reject) =>{
-            Album.save({
-                name: chance.word(),
-                cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
-                releaseDate: chance.date()
-            },  (err, saved) => {
-                if (err) {
-               reject(err)
-                }
-                resolve(saved)
+            new Promise((resolve, reject) => {
+                Album.save({
+                    name: chance.word(),
+                    cover: chance.avatar({ protocol: 'https', fileExtension: 'jpg' }),
+                    releaseDate: chance.date()
+                }, (err, saved) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve(saved)
+                })
+            }).then((saved) => {
+                console.log("Album saved")
+
+            }).catch((err) => {
+                console.log(err)
+                console.log("Album save failed")
+                return err
+
             })
-        }).then((saved) => {
-            ids.Artist.push(saved)
-           console.log("Album saved")
-
-       }).catch((err) => {
-           console.log(err)
-           console.log("Album save failed")
-           return err
-
-       })
         );
     }
 
-    return {saves:saves,ids:ids}
+    return saves
+
 }
 
 
 
+module.exports.MakeRels = async () => {
+    let ids = { User: [], Artist: [], Song: [], Playlist: [], Album: [] };
+  
+    console.log("Gettin Ids")
+    //Getting User Ids
+    ids.User = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('User', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
+    })
 
-module.exports.MakeRels = (data) => {
+    //Getting Artist Ids
+    ids.Artist = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Artist', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
+    })
+    //Getting Song Ids
+    ids.Song = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Song', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
+    })
+    //Getting Playlist Ids
+    ids.Playlist = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Playlist', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
+    })
+    //Getting Album Ids
+    ids.Album = await new Promise((resolve, reject) => {
+        db.nodesWithLabel('Album', (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            }
+            result = result.map((e) => e.id)
+            resolve(result)
+        })
+    })
+
+
     console.log("Making Relations");
-    var a = []
-
-    let userCount = data.User.length;
-    let songCount = data.Song.length;
-    let albumCount = data.Album.length;
-    let artistCount = data.Artist.length;
-    let playlistCount = data.Playlist.length;
+    let userCount = ids.User.length;
+    let songCount = ids.Song.length;
+    let albumCount = ids.Album.length;
+    let artistCount = ids.Artist.length;
+    let playlistCount = ids.Playlist.length;
 
     // Adding songs to Albums
     for (let i = 0; i < songCount; i++) {
-        let currentSong = data.Song[i]
+        let currentSong = ids.Song[i]
         let random = chance.integer({ min: 0, max: albumCount - 1 });
-        let album = data.Album[random]
-        let albumId = album.id;
-        db.rel.create(currentSong.id, 'Song_Of', albumId, (err, rel) => {
+        let album = ids.Album[random]
+        db.rel.create(currentSong, 'SONG_OF', album, (err, rel) => {
             if (err) {
                 console.log("SongOf_Album Update Failed");
                 return err
@@ -194,30 +242,133 @@ module.exports.MakeRels = (data) => {
             return true
         });
     }
-    //     // // Adding Song_Of_Artist Rels
-    // let possibleSongRels = ['Singer', 'Producer', 'Writter', 'Composer'];
+
+
+
+    // // Adding Song_Of_Artist Rels
+    let possibleSongRels = ['Singer_Of', 'Producer_Of', 'Writter_Of', 'Composer_Of'];
+    for (let i = 0; i < artistCount; i++) {
+        let artist = ids.Artist[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: songCount - 1 });
+            let random_roll = chance.integer({ min: 0, max: possibleSongRels.length - 1 });
+            let song = ids.Song[random];
+            db.rel.create(artist, 'ARTIST_OF', song, { rolls: possibleSongRels[random_roll] }, (err, rel) => {
+                if (err) {
+                    console.log("ArtistOf_Song Create Failed");
+                    return err
+                }
+                console.log("ArtistOf_Song Added");
+                return true
+            });
+        }
+    }
+
+
+    // Adding album-artist Rels
+    // let possibleAlbumRels = ['Singer_Of', 'Producer_Of', 'Writter_Of', 'Composer_Of'];
     // for (let i = 0; i < artistCount; i++) {
+    //     let artist = ids.Artist[i]
     //     for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
-    //         let random = chance.integer({ min: 0, max: songCount - 1 });
-    //         let song = Song[i]
-    //         let songId = song.id;
-    //         songs[j] = {
-    //             rel: possibleSongRels[chance.integer({ min: 0, max: possibleSongRels.length - 1 })],
-    //             song: songId
-    //         }
+    //         let random = chance.integer({ min: 0, max: albumCount - 1 });
+    //         let random_roll = chance.integer({ min: 0, max: possibleAlbumRels.length - 1 });
+    //         let album = ids.Album[random]
+    //         db.rel.create(artist, possibleAlbumRels[random_roll], album, (err, rel) => {
+    //             if (err) {
+    //                 console.log("ArtistOf_Album Create Failed");
+    //                 return err
+    //             }
+    //             console.log("ArtistOf_Album Added");
+    //             return true
+    //         })
     //     }
 
-    //     let currentArtist = await Artist.find().limit(-1).skip(i);
-    //     currentArtist = currentArtist[0];
-    //     currentArtist.songs = songs;
-    //     Artist.update({ _id: currentArtist._id }, currentArtist).then((w) => {
-    //         console.log("Artist Song Added");
-    //     }).catch((err) => {
-    //         console.log("Artist Song Update Failed");
-    //     });
     // }
 
+    // Adding songs to playlists
+    for (let i = 0; i < playlistCount; i++) {
+        let playlist = ids.Playlist[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: songCount - 1 });
+            let song = ids.Song[random]
+            db.rel.create(playlist, 'CONTAINS', song, (err, rel) => {
+                if (err) {
+                    console.log("SongOf_Playlist Create Failed");
+                    return err
+                }
+                console.log("SongOf_Playlist Added");
+                return true
+            })
+        }
+    }
+
+
+
+    //  Adding user Song Rels
+    let possibleUserSongRels = ['LISTENED', 'LIKED', 'HATED'];
+    for (let i = 0; i < userCount; i++) {
+        let user = ids.User[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: songCount - 1 });
+            let random_rels = chance.integer({ min: 0, max: possibleUserSongRels.length - 1 });
+            let song = ids.Song[random]
+            db.rel.create(user, possibleUserSongRels[random_rels], song, (err, rel) => {
+                if (err) {
+                    console.log("User_Song Rel Create Failed");
+                    return err
+                }
+                console.log("User_Song Rel Added");
+                return true
+            })
+
+        }
+    }
+
+    //Adding User Playlist Rels
+    for (let i = 0; i < userCount; i++) {
+        let user = ids.User[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: playlistCount - 1 });
+            let playlist = ids.Playlist[random]
+            db.rel.create(playlist, 'CREATED_BY', user, (err, rel) => {
+                if (err) {
+                    console.log("User_Playlist Rel Create Failed");
+                    return err
+                }
+                console.log("User_Playlist Rel Added");
+                return true
+            })
+
+        }
+    }
+
+    //Adding User Artist Rels
+    for (let i = 0; i < userCount; i++) {
+        let user = ids.User[i]
+        for (let j = 0; j < chance.integer({ min: 0, max: 100 }); j++) {
+            let random = chance.integer({ min: 0, max: artistCount - 1 });
+            let artist = ids.Artist[random]
+            db.rel.create(user, 'FOLLOWED', artist, (err, rel) => {
+                if (err) {
+                    console.log("User_Artist Rel Create Failed");
+                    return err
+                }
+                console.log("User_Artist Rel Added");
+                return true
+            })
+
+        }
+    }
+
+
+    return true
 }
+
+
+
+
+
+
 
 // // module.exports.makeRelations = async function () {
 //     let userCount = await User.count();

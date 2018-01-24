@@ -2,13 +2,10 @@ require('babel-register');
 require('babel-polyfill');
 const seedData = require('./seedData');
 
-var base =  seedData.createBase()
-var saves = base.saves
-var ids = base.ids
-Promise.all(
-  base
-   )
-  .then(console.log(ids))
+Promise.all(seedData.createBase())
+  .then(()=>{
+    seedData.MakeRels()
+  })
 
 
 // process.on('SIGINT', function() {  

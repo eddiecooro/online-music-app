@@ -22,7 +22,7 @@ module.exports = {
         },
         search: (source, args, context)=>{
             let modelsToSearch = ["User","Playlist","Song","Artist","Album"];
-            return db.search(modelsToSearch,args.text).then((data)=>{
+            return context.driver.search(modelsToSearch,args.text).then((data)=>{
                 return data;
             }).catch((err)=>{
                 console.log(err);
@@ -30,12 +30,12 @@ module.exports = {
         },
         viewer: (source,args,context)=>{
             if(context.user){
-                context.user.__modelName = "User";
+                context.user.__label = "User";
                 return context.user;
             } else {
                 return null
             }
-        }
+        },
     },
     //Specify Which Resolve Should Go
     Node: {
