@@ -2,6 +2,7 @@ var dbConfig = require('./databaseConfig')
 var db = require('seraph')({server: dbConfig.url+":"+dbConfig.port})
 
 // Helper functions
+// -----------------------------
 function makeCypherRels(rels){    
     rels = rels.map((rel)=>{
         let cypher = ``;
@@ -13,6 +14,21 @@ function makeCypherRels(rels){
         return cypher;
     }).join("()");
     return rels;
+}
+
+// converts seraph cypher query to promise
+db.cypherPromise = function(cypherQuery,label){
+    return new Promise((resolve,reject)=>{
+        this.query(cypherQuery,(err,data)=>{
+            if(err) reject(err);
+            if(label){
+                data.forEach((node)=>{
+                    node.__label = label;
+                })
+            }
+            resolve(data);
+        });
+    })
 }
 
 db.dbIdToNodeId = function(label, id){
@@ -38,16 +54,19 @@ db.getRels = function(source,rels,targetType){
         WHERE ID(n) = ${source.id}
         RETURN t
     `
-    console.log(cypher);
-    return new Promise((resolve,reject)=>{
-        this.query(cypher,(err,nodes)=>{
-            if(err) reject(err);
-            nodes.forEach((node)=>{
-                node.__label = targetType;
-            })
-            resolve(nodes);
-        });
-    })
+    return this.cypherPromise(cypher,targetType);
+}
+
+db.countRels = function(source,rels,targetType){
+    // making sure rels is an array
+    rels = Array.isArray(rels) ? rels : [rels];
+    let cypherRels = makeCypherRels(rels);
+    let cypher = `
+        MATCH (n:${source.__label})${cypherRels}(t:${targetType})
+        WHERE ID(n) = ${source.id}
+        RETURN count(t) AS count
+    `
+    return this.cypherPromise(cypher)
 }
 
 module.exports = db

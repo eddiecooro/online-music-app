@@ -11,7 +11,7 @@ module.exports = {
         },
 
         trackCount: (source, args, context) => {
-            return context.driver.getRels(source, { label: "CONTAINS", direction: "OUT" }, "Song").then((data)=>{return data.length});
+            return context.driver.countRels(source, { label: "CONTAINS", direction: "OUT" }, "Song").then((data)=>{return data[0].count});
         }
     }
 }
