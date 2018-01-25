@@ -18,7 +18,7 @@ import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';
 import User from './models/User';
 import { jwtOptions } from './config';
-
+import initLoaders from './database/loaders';
 
 var app = express();
 
@@ -56,11 +56,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-app.use('/login',login)
-// const db = require('./models/databaseAdapter')
 app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
     let context = {
-      driver: driver
+      login,
+      driver,
+      loader: initLoaders(),
     };
     if(req.user) context.user = req.user;
     return graphqlHttp({ 

@@ -4,6 +4,7 @@ export const typeDefs = `
         FEMALE
         OTHER
     }
+
     type Query {
         node(id:ID!): Node
         search(text: String!): [Node]
@@ -11,6 +12,7 @@ export const typeDefs = `
     }
 
     type Mutation {
+        login(username: String!,password: String!): String
         createUser(user:UserInput!): User
         updateUser(id:ID!,user:UserInput!): User
     }
