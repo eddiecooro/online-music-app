@@ -1,3 +1,11 @@
+const DataLoader = require('dataloader');
+const db = require('../../database/databaseAdapter')
+let trackLoader = new DataLoader((ids)=>{
+    return db.getRelsBatch(ids,"Playlist",{ label: "CONTAINS", direction: "OUT" }, "Song")
+})
+let trackCountLoader = new DataLoader((ids)=>{
+    return db.countRelsBatch(ids,"Playlist", { label: "CONTAINS", direction: "OUT" }, "Song");
+})
 module.exports = {
 
     Playlist: {
@@ -7,11 +15,12 @@ module.exports = {
         },
 
         tracks: (source, args, context) => {
-            return context.driver.getRels(source, { label: "CONTAINS", direction: "OUT" }, "Song");
+            return trackLoader.load(source.id);
+            // return context.driver.getRels(source, { label: "CONTAINS", direction: "OUT" }, "Song");
         },
 
         trackCount: (source, args, context) => {
-            return context.driver.countRels(source, { label: "CONTAINS", direction: "OUT" }, "Song").then((data)=>{return data[0].count});
+            return trackCountLoader.load(source.id);
         }
     }
 }
