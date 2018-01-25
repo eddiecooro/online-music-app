@@ -1,8 +1,15 @@
 var dbConfig = require('./databaseConfig')
 var db = require('seraph')({server: dbConfig.url+":"+dbConfig.port})
 const _ = require('lodash')
+
+
+
+
 // Helper functions
 // -----------------------------
+
+// By taking an array of rel objects, returns cypher rel query
+//   associate with those rels
 function makeCypherRels(rels){    
     rels = rels.map((rel)=>{
         let cypher = ``;
@@ -16,6 +23,9 @@ function makeCypherRels(rels){
     return rels;
 }
 
+// Arguments:
+//   res: array of result arrays. one array for each node result set
+//   label: __label to add to each result
 function labelResult(res,label){
     res.forEach((r)=>{
         r.forEach((obj)=>{
@@ -25,6 +35,10 @@ function labelResult(res,label){
     return res;
 }
 
+// Arguments:
+//   res([Object]): each object should have an id field
+//   ids(Array): array of ids.
+// Sorting res objects according to ids array order
 function sortResult(res,ids){
     res.sort((a,b)=>{
         return ids.indexOf(a.id) - ids.indexOf(b.id);
@@ -32,11 +46,10 @@ function sortResult(res,ids){
     return res;
 
 }
-
-function extractData(res){
-    return res.map((r)=>r.data);
-}
 // -----------------------------
+
+
+
 
 // converts seraph cypher query to promise
 db.cypherPromise = function(cypherQuery){
@@ -56,24 +69,13 @@ db.nodeIdToDbId = function(id){
 }
 
 // Arguments: 
-//   source(Object): starting node. should have id and __label
+//   ids(Array): List of all starting node ids
+//   sourceLabel(String): starting nodes label.
 //   rels([Object]): array of rel objects. each rel object should have both label and direction fields
 //     example: {label: "SONG_OF",direction: "OUT"}
 //   targetType(String): type of node to return
 // Returns:
-//   a promise that resolves by database result
-db.getRels = function(source,rels,targetType){
-    // making sure rels is an array
-    rels = Array.isArray(rels) ? rels : [rels];
-    let cypherRels = makeCypherRels(rels);
-    let cypher = `
-        MATCH (n:${source.__label})${cypherRels}(t:${targetType})
-        WHERE ID(n) = ${source.id}
-        RETURN t
-    `
-    return this.cypherPromise(cypher);
-}
-
+//   a promise that resolves by an array of database results
 db.getRelsBatch = function(ids,sourceLabel,rels,targetType){
     // making sure rels is an array
     rels = Array.isArray(rels) ? rels : [rels];
@@ -87,12 +89,14 @@ db.getRelsBatch = function(ids,sourceLabel,rels,targetType){
     return this.cypherPromise(cypher).then((res)=>{
         return sortResult(res,ids)
     }).then((res)=>{
-        return extractData(res)
+        return res.map((r)=>r.data);
     }).then((res)=>{
         return labelResult(res,targetType)
     });
 }
 
+// such as getRelsBatch function, but returns count of targets instead
+//  of targets
 db.countRelsBatch = function(ids,sourceLabel,rels,targetType){
     // making sure rels is an array
     rels = Array.isArray(rels) ? rels : [rels];
@@ -105,20 +109,8 @@ db.countRelsBatch = function(ids,sourceLabel,rels,targetType){
     return this.cypherPromise(cypher).then((res)=>{
         return sortResult(res,ids);
     }).then((res)=>{
-        return extractData(res);
+        return res.map((r)=>r.data);
     })
-}
-
-db.countRels = function(source,rels,targetType){
-    // making sure rels is an array
-    rels = Array.isArray(rels) ? rels : [rels];
-    let cypherRels = makeCypherRels(rels);
-    let cypher = `
-        MATCH (n:${source.__label})${cypherRels}(t:${targetType})
-        WHERE ID(n) = ${source.id}
-        RETURN count(t) AS count
-    `
-    return this.cypherPromise(cypher)
 }
 
 module.exports = db
