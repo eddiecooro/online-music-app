@@ -15,6 +15,7 @@ function makeCypherRels(rels){
     }).join("()");
     return rels;
 }
+// -----------------------------
 
 // converts seraph cypher query to promise
 db.cypherPromise = function(cypherQuery,label){
