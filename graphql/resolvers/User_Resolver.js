@@ -3,6 +3,20 @@ module.exports = {
             id: (source, args, ctx, info) => {
                 return ctx.driver.dbIdToNodeId("User",source.id);
             },
+            email: (source, args, ctx) => {
+                if(source.id === ctx.user.id || ctx.user.admin){
+                    return source.email;
+                } else {
+                    return null;
+                }
+            },
+            age: (source, args, ctx) => {
+                if(source.id === ctx.user.id || ctx.user.admin){
+                    return source.age;
+                } else {
+                    return null;
+                }
+            },
             playlists: (source, args, ctx) => {
                 return ctx.loader.user.playlistLoader.load(source.id);
             },

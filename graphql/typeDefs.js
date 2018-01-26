@@ -23,9 +23,8 @@ export const typeDefs = `
 
     type User implements Node {
         id: ID!
-        emailValidated: Boolean
         username: String!
-        email: String!
+        email: String
         nickname: String
         avatar: String
         age: Int
