@@ -8,6 +8,9 @@ module.exports = {
         },
         artists: (source, args, ctx) => {
             return ctx.loader.song.artistLoader.load(source.id); 
+        },
+        likedBy: (source,args,ctx) => {
+            return ctx.loader.song.likedByLoader.load(source.id);
         }
     }
 }

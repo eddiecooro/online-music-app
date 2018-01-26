@@ -68,6 +68,7 @@ export const typeDefs = `
         tags: [String]
         artists: [Artist]
         playlist: [Playlist]
+        likedBy: [User]
     }
 
     type Artist implements Node {
@@ -79,6 +80,7 @@ export const typeDefs = `
         SingerType: String
         albums: [Album]
         songs: [Song]
+        followedBy: [User]
     }
 
     type UserMutation{

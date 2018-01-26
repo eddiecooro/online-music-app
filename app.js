@@ -60,7 +60,7 @@ app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
     let context = {
       login,
       driver,
-      loader: initLoaders(),
+      loader: initLoaders(req.user),
     };
     if(req.user) context.user = req.user;
     return graphqlHttp({ 

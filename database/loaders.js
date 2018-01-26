@@ -2,7 +2,7 @@ const DataLoader = require('dataloader');
 const db = require('./databaseAdapter');
 
 // data loaders with batching & caching
-export default function(){
+export default function(user){
     return {
         album: {
             artistLoader: new DataLoader((ids) => {
@@ -25,6 +25,9 @@ export default function(){
             songLoader: new DataLoader((ids) => {
                 return db.getRelsBatch(ids,"Artist", {label:"ARTIST_OF",direction:"OUT"}, "Song");
             }),
+            followedByLoader: new DataLoader((ids)=>{
+                return db.getRelsBatch(ids,"Artist", {label:"FOLLOWED",direction:"IN"}, "User");
+            }),
         },
         playlist: {
             trackLoader: new DataLoader((ids)=>{
@@ -40,6 +43,9 @@ export default function(){
             }),
             artistLoader: new DataLoader((ids)=>{
                 return db.getRelsBatch(ids,"Song", {label:"ARTIST_OF",direction:"IN"}, "Artist");
+            }),
+            likedByLoader: new DataLoader((ids)=>{
+                return db.getRelsBatch(ids,"Song", {label:"LIKED",direction:"IN"}, "User");
             }),
         },
         user: {
