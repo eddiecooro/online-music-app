@@ -12,11 +12,11 @@ const graphql = require('graphql');
 const graphqlHttp = require('express-graphql');
 // adding helmet secury middleware
 const helmet = require('helmet');
-let driver = require("./database/databaseAdapter");  
+let driver = require("./database/databaseAdapter");
 
+import models from './models';
 import graphqlSchema from './graphql';
 import { login, graphqlAuthenticate } from './auth';
-import User from './models/User';
 import { jwtOptions } from './config';
 import initLoaders from './database/loaders';
 
@@ -28,7 +28,7 @@ const params = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 let strategy = new Strategy(params, async (payload,done)=>{
-  User.read(payload.id, (err,user)=>{
+  models.User.read(payload.id, (err,user)=>{
     if(err){
       return done(err,null);
     } else {
@@ -60,6 +60,7 @@ app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
     let context = {
       login,
       driver,
+      models,
       loader: initLoaders(req.user),
     };
     if(req.user) context.user = req.user;

@@ -6,7 +6,7 @@ import SongResolver from './SongResolver';
 import PlaylistResolver from './PlaylistResolver';
 import ArtistResolver from './ArtistResolver';
 import AlbumResolver from './AlbumResolver';
-import RootMutation from './mutations/RootMutationResolver';
+import RootMutation from './RootMutationResolver';
 
 const resolvers = merge(
     RootResolver,

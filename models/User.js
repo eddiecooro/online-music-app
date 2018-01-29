@@ -6,8 +6,17 @@ const bcrypt = require("bcrypt");
 
 var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
-UserModel.setUniqueKey('username')
-UserModel.setUniqueKey('email')
+db.query("CREATE CONSTRAINT ON (user:User) ASSERT user.username IS UNIQUE",(err,data)=>{
+    if(err){
+        console.log(err);
+    }
+})
+db.query(" CREATE CONSTRAINT ON (user:User) ASSERT user.email IS UNIQUE",(err,data)=>{
+    if(err){
+        console.log(err);
+    }
+})
+
 UserModel.on('beforeSave', (obj) => {
     obj.password = bcrypt.hashSync(obj.password, 12)
     return obj

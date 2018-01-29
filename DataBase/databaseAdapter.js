@@ -61,6 +61,7 @@ db.dbIdToNodeId = function(label, id){
     return label + ":" + id;
 }
 db.nodeIdToDbId = function(id){
+    if(id.indexOf(":") < 0) throw new Error("Invalid id");
     return id.split(":");
 }
 
@@ -107,6 +108,16 @@ db.countRelsBatch = function(ids,sourceLabel,rels,targetType){
     }).then((res)=>{
         return res.map((r)=>r.data);
     })
+}
+
+db.deleteNode = function(id,sourceLabel=""){
+    let cypher = `
+        MATCH (n:${sourceLabel})
+        WHERE ID(n) = ${id}
+        DETACH DELETE n
+    `
+    console.log(cypher);
+    return this.cypherPromise(cypher);
 }
 
 module.exports = db
