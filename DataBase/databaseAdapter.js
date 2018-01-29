@@ -1,9 +1,5 @@
-var dbConfig = require('./databaseConfig')
-var db = require('seraph')({server: dbConfig.url+":"+dbConfig.port})
+var db = require('seraph')({server: process.env.NEO4J_HTTP_URL+":"+process.env.NEO4J_HTTP_PORT})
 const _ = require('lodash')
-
-
-
 
 // Helper functions
 // -----------------------------

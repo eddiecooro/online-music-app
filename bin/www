@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+//seting env variables
+require('dotenv').config();
+
 // importing babel for async/await and es5 import support
 require('babel-register');
 require('babel-polyfill');

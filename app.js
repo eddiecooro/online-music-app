@@ -63,10 +63,10 @@ app.use('/graphql', graphqlAuthenticate, (req,res,next)=>{
       loader: initLoaders(req.user),
     };
     if(req.user) context.user = req.user;
-    return graphqlHttp({ 
+    return graphqlHttp({
       schema: graphqlSchema,
       context:context,
-      graphiql:true,
+      graphiql: process.env.NODE_ENV === 'development',
       pretty:true
      })(req,res,next)
   }
