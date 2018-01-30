@@ -7,11 +7,11 @@ module.exports = {
         },
 
         tracks: (source, args, ctx) => {
-            return playlist.loader.playlist.trackLoader.load(source.id);
+            return ctx.loader.playlist.trackLoader.load(source.id);
         },
 
         trackCount: (source, args, ctx) => {
-            return playlist.loader.playlist.trackCountLoader.load(source.id);
+            return ctx.loader.playlist.trackCountLoader.load(source.id);
         }
     }
 }

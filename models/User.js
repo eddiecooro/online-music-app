@@ -45,6 +45,7 @@ UserModel.schema = {
         lowercase: true,
         match: emailRegex,
     },
+    admin: {type:Boolean},
     avatar: { type: String },
     nickname: { type: String },
     gender: { type: String },

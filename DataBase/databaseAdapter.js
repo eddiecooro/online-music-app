@@ -1,21 +1,23 @@
 var db = require('seraph')({server: process.env.NEO4J_HTTP_URL+":"+process.env.NEO4J_HTTP_PORT})
+const Chance = require('chance');
+let chance = new Chance();
 const _ = require('lodash')
 
 // Helper functions
 // -----------------------------
 
-// By taking an array of rel objects, returns cypher rel query
+// By taking an array of rel objects, returns array of cypher rel queries
 //   associate with those rels
 function makeCypherRels(rels){    
     rels = rels.map((rel)=>{
         let cypher = ``;
         if(rel.direction == "IN"){
-            cypher += `<-[${rel.label}]-`;
+            cypher += `<-[${rel.label} ${rel.props?rel.props:''}]-`;
         } else if(rel.direction == "OUT") {
-            cypher += `-[${rel.label}]->`;
+            cypher += `-[${rel.label} ${rel.props?rel.props:''}]->`;
         }
         return cypher;
-    }).join("()");
+    });
     return rels;
 }
 
@@ -76,11 +78,12 @@ db.nodeIdToDbId = function(id){
 db.getRelsBatch = function(ids,sourceLabel,rels,targetType){
     // making sure rels is an array
     rels = Array.isArray(rels) ? rels : [rels];
-    let cypherRels = makeCypherRels(rels);
+    let cypherRels = makeCypherRels(rels).join("()");
+
     let cypher = `
         MATCH (n:${sourceLabel})${cypherRels}(t:${targetType})
         WHERE ID(n) IN [${ids}]
-        RETURN COLLECT(t) AS data,ID(n) AS id
+        RETURN COLLECT(distinct t) AS data,ID(n) AS id
     `
     
     return this.cypherPromise(cypher).then((res)=>{
@@ -97,7 +100,7 @@ db.getRelsBatch = function(ids,sourceLabel,rels,targetType){
 db.countRelsBatch = function(ids,sourceLabel,rels,targetType){
     // making sure rels is an array
     rels = Array.isArray(rels) ? rels : [rels];
-    let cypherRels = makeCypherRels(rels);
+    let cypherRels = makeCypherRels(rels).join("()");
     let cypher = `
         MATCH (n:${sourceLabel})${cypherRels}(t:${targetType})
         WHERE ID(n) IN [${ids}]
@@ -116,8 +119,55 @@ db.deleteNode = function(id,sourceLabel=""){
         WHERE ID(n) = ${id}
         DETACH DELETE n
     `
-    console.log(cypher);
     return this.cypherPromise(cypher);
+}
+
+db.createNodeWithRels = function(source,sourceLabel,rels=[]){
+    let txn = this.batch();
+
+    source = txn.save(source);
+    txn.label(source,[sourceLabel],true);
+    rels.forEach((rel)=>{
+        rel.targetIds.forEach((targetId)=>{
+            if(rel.direction === "IN"){
+                txn.relate(targetId,rel.label,source,rel.props);
+            } else if (rel.direction === "OUT") {
+                txn.relate(source,rel.label,targetId,rel.props);
+            } else {
+                throw new Error("Invalid direction");
+            }
+        });
+    });
+    return new Promise((resolve,reject)=>{
+        txn.commit((err,result)=>{
+            if(err) reject(err);
+            resolve(result);
+        })
+    })
+};
+
+db.createRels = function(sourceId,rels=[]){
+    let txn = this.batch();
+    return new Promise((resolve,reject)=>{
+        this.read(sourceId,(err,source)=>{
+            if(err) reject(err);
+            rels.forEach((rel)=>{
+                rel.targetIds.forEach((targetId)=>{
+                    if(rel.direction === "IN"){
+                        txn.relate(targetId,rel.label,source,rel.props);
+                    } else if (rel.direction === "OUT") {
+                        txn.relate(source,rel.label,targetId,rel.props);
+                    } else {
+                        throw new Error("Invalid direction");
+                    }
+                });
+            });
+            txn.commit((err,result)=>{
+                if(err) reject(err);
+                resolve(source);
+            })
+        });
+    })
 }
 
 module.exports = db

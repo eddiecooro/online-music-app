@@ -7,6 +7,7 @@ module.exports = {
             return ctx.loader.song.albumLoader.load(source.id).then((res)=>(res[0]));
         },
         artists: (source, args, ctx) => {
+            console.log(source.id);
             return ctx.loader.song.artistLoader.load(source.id); 
         },
         likedBy: (source,args,ctx) => {
